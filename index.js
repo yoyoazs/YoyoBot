@@ -20,7 +20,7 @@ bot.on("ready", () => {
   console.log("Je suis pres a l'utilisation!");
 })
 
-bot.login("Mzg3NjY5MTMzMzA0NTI4ODk3.DQ4ZdA.RkIKB-U-aYpPL6BjER68lw4nkio");
+bot.login(process.env.TOKEN);
 
 bot.on("guildMemberAdd", member =>{
 	member.guild.channels.find("name","welcome").channel.send(message,`Bienvenue a ${member.user.username} sur le serveur !`)
