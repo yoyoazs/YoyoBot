@@ -546,57 +546,62 @@ message.channel.send(sayings[result]);
 		}
 	}
 
-	if (message.content === prefix + "purge" ) {
-		
-					if (!message.channel.permissionsFor(message.author).hasPermission("MANAGE_MESSAGES")) {
-						message.channel.sendMessage("Désolé, vous n'avez pas la permission d'exécuter la commande \""+message.content+"\"");
-						console.log("Désolé, vous n'avez pas la permission d'exécuter la commande \""+message.content+"\"");
-						return;
-					} else if (!message.channel.permissionsFor(bot.user).hasPermission("MANAGE_MESSAGES")) {
-						message.channel.sendMessage(" \""+message.content+"\"");
-						console.log("Désolé, je n'ai pas la permission d'exécuter la commande \""+message.content+"\"");
-						return;
-					}
+//  if(command === "purge") {
+    // This command removes all messages from all users in the channel, up to 100.
+    
+    // get the delete count, as an actual number.
+//    const deleteCount = parseInt(args[0], 10);
+    
+    // Ooooh nice, combined conditions. <3
+//    if(!deleteCount || deleteCount < 2 || deleteCount > 100)
+ //     return message.reply("Please provide a number between 2 and 100 for the number of messages to delete");
+    
+    // So we get our messages, and delete them. Simple enough, right?
+ //   const fetched = await message.channel.fetchMessages({count: deleteCount});
+  //  message.channel.bulkDelete(fetched)
+   //   .catch(error => message.reply(`Couldn't delete messages because of: ${error}`));
+ // }
 
-					if (message.channel.type == 'text') {
-						message.channel.fetchMessages()
-							.then(messages => {
-								message.channel.bulkDelete(messages);
-								messagesDeleted = messages.array().length; 
 
-								message.channel.sendMessage("Suppression des messages réussie. Nombre total de messages supprimés: "+messagesDeleted);
-								console.log('Suppression des messages réussie. Nombre total de messages supprimés: '+messagesDeleted)
-							})
-							.catch(err => {
-								console.log('Error while doing Bulk Delete');
-								console.log(err);
-							});
-					}
-				}
-			
-
-if (command == "mute") { 
-	if (!message.member.roles.some(r=>["bot-admin"].includes(r.name)) ) return message.reply("Désolé, vous n'avez pas les permissions de mute !");
-	var mutedmember = message.mentions.members.first(); 
-	if (!mutedmember) return message.reply("Merci de bien voulloir sélectionné une personne sur se serveur !") 
-	if (mutedmember.hasPermission("ADMINISTRATOR")) return message.reply("Je ne peut pas mute cette personne !") 
-	var mutereasondelete = 10 + mutedmember.user.id.length 
-	var mutereason = message.content.substring(mutereasondelete).split(" "); 
-	var mutereason = mutereason.join(" ");
-	if (!mutereason) return message.reply("Merci d'indiquer la réson du mute !") 
-	mutedmember.addRole(mutedrole) 
-			.catch(error => message.reply(`Désolé ${message.author} Je ne peut pas mute en raison de: ${error}`)); 
-	message.reply(`${mutedmember.user} a étais mute par ${message.author} pour: ${mutereason}`); 
-}
-
-if (command == "unmute") {
-	if (!message.member.roles.some(r=>["bot-admin"].includes(r.name)) ) return message.reply("Désolé, vous n'avez par les permissons d'unmute !");
-	var unmutedmember = message.mentions.members.first();
-	if (!unmutedmember) return message.reply("Merci de bien voulloir sélectionné une personne sur se serveur !") 
-	unmutedmember.removeRole(mutedrole) 
-			.catch(error => message.reply(`Désolé ${message.author} je ne peut pas unmute en raison de : ${error}`)); 
-	message.reply(`${unmutedmember.user} a étais unmute par ${message.author}!`); 
-}
+var msg = message;
+if(msg.content.startsWith(prefix + 'mute')){
+		if(msg.channel.type === 'dm') return;
+		if(!msg.guild.member(msg.author).hasPermission('MANAGE_MESSAGES')){
+		return msg.reply("**:x: Vous n'avez pas la permissions d'utiliser cette commande**").catch(console.error);
+		}
+		if(msg.mentions.users.size === 0){
+		return msg.reply("**:x: Veuillez mentionner l'utilisateur que vous voulez mute**")
+		}
+		if(!msg.guild.member(bot.user).hasPermission('MANAGE_MESSAGES')){
+		return msg.reply("**:x: Je n'ai pas la permission `MANAGE_MESSAGES` pour mute cet utilisateur**").catch(console.error);
+		}
+		let muteMember = msg.guild.member(msg.mentions.users.first());
+		if(!muteMember){
+		return msg.channel.send("**:x: Cet utilisateur n'est certainement pas valide**")
+		}
+		msg.channel.overwritePermissions(muteMember, {SEND_MESSAGES: false}).then(member => {
+		msg.channel.send(`:speak_no_evil: **${muteMember.displayName}** a bien été mute ! :speak_no_evil:`);
+		})
+		}
+		if(msg.content.startsWith(prefix + 'unmute')){
+		if(msg.channel.type === 'dm') return;
+		if(!msg.guild.member(msg.author).hasPermission('MANAGE_MESSAGES')){
+		return msg.reply("**:x: Vous n'avez pas la permissions d'utiliser cette commande**").catch(console.error);
+		}
+		if(msg.mentions.users.size === 0){
+		return msg.reply("**:x: Veuillez mentionner l'utilisateur que vous voulez unmute**")
+		}
+		if(!msg.guild.member(bot.user).hasPermission('MANAGE_MESSAGES')){
+		return msg.reply("**:x: Je n'ai pas la permission `MANAGE_MESSAGES` pour unmute cet utilisateur**").catch(console.error);
+		}
+		let unmuteMember = msg.guild.member(msg.mentions.users.first());
+		if(!unmuteMember){
+		return msg.channel.send("**:x: Cet utilisateur n'est certainement pas valide**")
+		}
+		msg.channel.overwritePermissions(unmuteMember, {SEND_MESSAGES: true}).then(member => {
+		msg.channel.send(`:monkey_face: **${unmuteMember.displayName}** a bien été unmute ! :monkey_face:`);
+		})
+		}
 
 	if(command === "say") {
 		const sayMessage = arg.join(" ");
