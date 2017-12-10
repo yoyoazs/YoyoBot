@@ -21,7 +21,7 @@ bot.on("ready", () => {
   console.log("Je suis pres a l'utilisation!");
 })
 
-bot.login(process.env.TOKEN);
+bot.login(bot.login(process.env.TOKEN));
 
 bot.on("guildMemberAdd", member =>{
 	member.guild.channels.find("name","welcome").channel.send(message,`Bienvenue a ${member.user.username} sur le serveur !`)
@@ -30,8 +30,6 @@ bot.on("guildMemberAdd", member =>{
 bot.on("guildMemberRemove", member =>{
 	member.guild.channels.find("name","welcome").channel.send(`:rocket: ${member.user.username} viens de quitter le serveur !`)
 })
-
-
 
 bot.on("message", (message) => {
 
@@ -63,8 +61,302 @@ bot.on("message", (message) => {
 
 	}
 
+
+	
+	if(message.content === prefix+ "help"){
+		message.delete()
+		message.channel.send('', { embed: {
+			corlor: 543756,
+			author: {
+			  name: message.author.tag,
+			  icon_url: message.author.avatarURL,
+		   },
+		   title: 'Tout ce que le bot rajoute !',
+		   url: '',
+		   fields: [
+			  {
+				name: 'Les commandes', 
+				value: `-help : Affiche les commandes du bot \n -up : Voir depuis combien de temps le bot est démarer ! \n -info : Voir les info du bot ! \n -newblague (text) : Ajoute une blague a la base de donné ! \n -raconteuneblague : Le bot raconte une blagues aléatoire (en dévellopement) !\n-niveau : Affiche votre xp !\n-kick : Pour kick une personne !\n-ban : Pour ban une personne !\n-shop : Pour voir les objetc que vous pouvez acheté avec votre XP !\n-buyitem (ID): Pour acheté un objet disponible dans le shop !\n-nouveauté : Pour voir les nouveauté du bot !\n-invitation : Pour voir l'invitation du bot !\n-stats : Pour voir vos stats !\n-créateur : Pour voir le créateur du bot !\n-flip : Permet de lancé une pièce !\n-8ball : Pense a une question et la ball te réponderas !\n-fetenoel (speudo) : Fete noel a quelqu'un !\n-Say (text): Permet de faire dire quelque chose au bot !\n-purge : Permet de supprimé 50 messages !\n-mute (@exemple#0000) (raison) : Permet de mute une personne !\n-unmute (@exemple#0000) : Permet d'unmute une personne !`,
+			  },
+			  {
+				name: 'Les intéractions',
+				value: `ping : Le bot répond pong et dit les ms du bot\nComment vas-tu bot ? : Le bot choisit entre deux réponse aux hasard (en dévellopement) !`,
+				 },
+				 {
+					 name: 'Les ajouts',
+					 value: `Message de bienvenue et d'en revoir`,
+				 }
+			],
+			footer: {
+			  icon_url: bot.user.avatarURL,
+			  text: bot.user.username		
+		  },
+	  }})
+		console.log("Commande help demandée !");
+	}
+
+	if (message.content =="comment vas tu ?") {
+		console.log("message comment vas tu initialisé");
+		var result = Math.floor((Math.random() * 2) + 1);
+		console.log(result);
+		if (result == 1){
+			message.reply("Merci, je vais très bien !");
+		}else if (result == 2){
+	  	message.reply("Je ne vais pas très bien, merci de te soucier de moi !");
+	 		}
+		}
+	
+	if(message.content === prefix + "info") {
+		message.delete()
+		var s = (Math.round(bot.uptime / 1000) % 60)
+		var m = (Math.round(bot.uptime / (1000 * 60)) % 60)
+		var h = (Math.round(bot.uptime / (1000 * 60 * 60)))
+		var j = (Math.round(bot.uptime / (1000 * 60 * 60) % 60))
+		m = (m < 10) ? "0" + m : m;
+    s = (s < 10) ? "0" + s : s;
+	message.channel.send('', { embed: {
+	corlor: 543756,
+	author: {
+		name: message.author.tag,
+		icon_url: message.author.avatarURL,
+	 },
+	 title: `Information du bot`,
+	 url: '',
+	 fields: [
+		{
+		name: `Nombres de serveurs !`, 
+		value: `${bot.guilds.size}`
+		},
+		{
+		name: 'Nombres de personne utilisant ce bot !',
+		value: `${bot.users.size}`
+		},
+		{
+		name: `Nombres de channels que le bot peut utilisé !`,
+		value: `${bot.channels.size}`
+		},
+		{
+		name: 'RAM !',
+		value: `${Math.ceil(process.memoryUsage().heapTotal / 1000000)}`
+		},
+		{
+		name: 'Uptime !',
+		value: `${j} Jours ${h} Heures ${m} Minutes ${s} Secondes`
+		},
+	],
+	footer: {
+		icon_url: bot.user.avatarURL,
+		text: bot.user.username			
+	},
+}})
+}
+
+	  if(message.content === prefix + 'up') {
+			message.delete()
+        var name = message.author.tag;
+        var icon = message.author.avatarURL;
+        var s = (Math.round(bot.uptime / 1000) % 60)
+        var m = (Math.round(bot.uptime / (1000 * 60)) % 60)
+				var h = (Math.round(bot.uptime / (1000 * 60 * 60)))
+				var j = (Math.round(bot.uptime / (1000 * 60 * 60) % 60))
+        m = (m < 10) ? "0" + m : m;
+        s = (s < 10) ? "0" + s : s;
+        message.channel.send('', { embed: {
+          color: 543756,
+          author: {
+            name: message.author.tag,
+            icon_url: message.author.avatarURL,
+          },
+          title: '',
+          url: '',
+          fields: [
+            {
+              name: 'YoyoBot UpTime',
+              value: `${j} Jours ${h} Heures ${m} Minutes ${s} Secondes`,
+              inline: true
+            },
+          ],
+          footer: {
+            icon_url: bot.user.avatarURL,
+            text: bot.user.username
+        },
+    }})
+    }
+
+	if (message.content === prefix + "niveau") {
+		message.delete()
+		var name = message.author.tag;
+		var icon = message.author.avatarURL;
+		var xp = db.get("xp").filter({user: msgauthor}).find("xp").value()
+		var xpfinal = Object.values(xp);
+		message.channel.send('', { embed: {
+		  corlor: 543756,
+		  author: {
+			name: message.author.tag,
+			icon_url: message.author.avatarURL,
+		 },
+		 title: '',
+		 url: '',
+		 fields: [
+			{
+			  name: 'XP', 
+			  value: `${xpfinal[1]}`
+			},
+		  ],
+		  footer: {
+			icon_url: bot.user.avatarURL,
+			text: bot.user.username		
+		},
+	}})
+	}
+
+	if (message.content === prefix + "nouveauté"){
+		message.delete()
+		message.channel.send('', { embed: {
+			corlor: 543756,
+			author: {
+			  name: message.author.tag,
+			  icon_url: message.author.avatarURL,
+		   },
+		   title: 'Nouveauté !',
+		   url: '',
+		   fields: [
+			  {
+				name: 'Version du bot: Alpha.', 
+				value: `Auqu'une amélioration de commande !`
+				},
+				{
+					name: 'Ajout :',
+					value: `Ajout de la commande 'flip' !\nAjout de la commande '8rall' !\nAjout de la commande 'fetenoel' !\nAjout de la commande 'say' !\nAjout de la commande 'purge' !\nAjout de la commande 'mute' !\nAjout de la commande 'unmute' !`
+				}
+			],
+			footer: {
+			  icon_url: bot.user.avatarURL,
+			  text: bot.user.username			
+		    },
+		}})
+	}
+
+	if(message.content === prefix + "invitation"){
+		message.delete()
+		message.channel.send('', { embed: {
+			color: 543756,
+			author: {
+				name: message.author.tag,
+				icon_url: message.author.avatarURL,
+			},
+			title: "Invitation du bot !",
+			url: '',
+			fields: [
+				{
+				name: `Voici l'invitation du bot !`,
+				value: `https://discordapp.com/api/oauth2/authorize?client_id=387669133304528897&permissions=2146958583&scope=bot`,
+				},
+			],
+			footer:{
+				icon_url: bot.user.avatarURL,
+				text: bot.user.username
+			},
+		}})
+	}
+
+	if(message.content === prefix + "créateur"){
+		message.delete()
+		message.channel.send('', { embed: {
+			color: 543756,
+			author: {
+				name: message.author.tag,
+				icon_url: message.author.avatarURL
+			},
+			title: "Créateur du bot !",
+			url: '',
+			fields: [
+				{
+				name: `Le créateur du bot est :`,
+				value: 'Yoyoazs#6197'
+				},
+			],
+			footer:{
+				icon_url: bot.user.avatarURL,
+				text: bot.user.username
+			},
+		}})
+	}
+
+	if (message.content === prefix + "roll") {
+		var result = Math.floor((Math.random() * 100) + 1);
+		message.reply("Tu est tombé sur  " + result);
+	}
+
+	if (message.content === prefix + "flip") {
+		var result = Math.floor((Math.random() * 2) + 1);
+		if (result == 1) {
+			message.reply("La pièce est tombé sur pil !");
+		} else if (result == 2) {
+			message.reply("La pièce est tombé sur face !");
+		}
+	}
+
+var msg = message;
+if(msg.content.startsWith(prefix + 'mute')){
+		if(msg.channel.type === 'dm') return;
+		if(!msg.guild.member(msg.author).hasPermission('MANAGE_MESSAGES')){
+		return msg.reply("**:x: Vous n'avez pas la permissions d'utiliser cette commande**").catch(console.error);
+		}
+		if(msg.mentions.users.size === 0){
+		return msg.reply("**:x: Veuillez mentionner l'utilisateur que vous voulez mute**")
+		}
+		if(!msg.guild.member(bot.user).hasPermission('MANAGE_MESSAGES')){
+		return msg.reply("**:x: Je n'ai pas la permission `MANAGE_MESSAGES` pour mute cet utilisateur**").catch(console.error);
+		}
+		let muteMember = msg.guild.member(msg.mentions.users.first());
+		if(!muteMember){
+		return msg.channel.send("**:x: Cet utilisateur n'est certainement pas valide**")
+		}
+		msg.channel.overwritePermissions(muteMember, {SEND_MESSAGES: false}).then(member => {
+		msg.channel.send(`:speak_no_evil: **${muteMember.displayName}** a bien été mute ! :speak_no_evil:`);
+		})
+		}
+		if(msg.content.startsWith(prefix + 'unmute')){
+		if(msg.channel.type === 'dm') return;
+		if(!msg.guild.member(msg.author).hasPermission('MANAGE_MESSAGES')){
+		return msg.reply("**:x: Vous n'avez pas la permissions d'utiliser cette commande**").catch(console.error);
+		}
+		if(msg.mentions.users.size === 0){
+		return msg.reply("**:x: Veuillez mentionner l'utilisateur que vous voulez unmute**")
+		}
+		if(!msg.guild.member(bot.user).hasPermission('MANAGE_MESSAGES')){
+		return msg.reply("**:x: Je n'ai pas la permission `MANAGE_MESSAGES` pour unmute cet utilisateur**").catch(console.error);
+		}
+		let unmuteMember = msg.guild.member(msg.mentions.users.first());
+		if(!unmuteMember){
+		return msg.channel.send("**:x: Cet utilisateur n'est certainement pas valide**")
+		}
+		msg.channel.overwritePermissions(unmuteMember, {SEND_MESSAGES: true}).then(member => {
+		msg.channel.send(`:monkey_face: **${unmuteMember.displayName}** a bien été unmute ! :monkey_face:`);
+		})
+		}
+
+		if(msg.content.startsWith(prefix + 'say')){
+		const sayMessage = arg.join(" ");
+		message.delete().catch(O_o=>{});
+		message.channel.send(sayMessage);
+	}
+
+//	bot.on('message', function(message) {
+//		if(msg.content.startsWith(prefix + 'clear')){
+ //       if (message.member.hasPermission("MANAGE_MESSAGES")) {
+  //          message.channel.fetchMessages()
+   //            .then(function(list){
+    //                message.channel.bulkDelete(list);
+     //           }, function(err){message.channel.send("ERROR: ERROR CLEARING CHANNEL.")})                        
+      //  }
+   // }
+
+//});
+
   if (message.content.startsWith("ping")) {
-	  message.channel.send(`:ping_pong: pong! Mon ping est de : ${Date.now() - message.createdTimestamp} ms`);
+		message.channel.send(`:ping_pong: pong! Mon ping est de : ${Date.now() - message.createdTimestamp} ms`);
 	  console.log("ping pong");
 	
 	}
@@ -223,6 +515,19 @@ bot.on("message", (message) => {
 			
 					break;
 
+					case "roulette":
+					var sayings = ["noir",
+					"rouge",
+					"vert",
+					"noir",
+					"rouge",
+					"noir",
+					"rouge"]
+var result = Math.floor((Math.random() * sayings.length) + 0);
+message.channel.send(sayings[result]);
+
+					break;
+
 					case "8ball":
 
 					var sayings = [":8ball: ***Il est certain***",
@@ -310,307 +615,9 @@ message.channel.send(sayings[result]);
 		}})
 
 			break;
-	}
-	
-	if(message.content === prefix+ "help"){
-		message.delete()
-		message.channel.send('', { embed: {
-			corlor: 543756,
-			author: {
-			  name: message.author.tag,
-			  icon_url: message.author.avatarURL,
-		   },
-		   title: 'Tout ce que le bot rajoute !',
-		   url: '',
-		   fields: [
-			  {
-				name: 'Les commandes', 
-				value: `-help : Affiche les commandes du bot \n -up : Voir depuis combien de temps le bot est démarer ! \n -info : Voir les info du bot ! \n -newblague (text) : Ajoute une blague a la base de donné ! \n -raconteuneblague : Le bot raconte une blagues aléatoire (en dévellopement) !\n-niveau : Affiche votre xp !\n-kick : Pour kick une personne !\n-ban : Pour ban une personne !\n-shop : Pour voir les objetc que vous pouvez acheté avec votre XP !\n-buyitem (ID): Pour acheté un objet disponible dans le shop !\n-nouveauté : Pour voir les nouveauté du bot !\n-invitation : Pour voir l'invitation du bot !\n-stats : Pour voir vos stats !\n-créateur : Pour voir le créateur du bot !\n-flip : Permet de lancé une pièce !\n-8ball : Pense a une question et la ball te réponderas !\n-fetenoel (speudo) : Fete noel a quelqu'un !\n-Say (text): Permet de faire dire quelque chose au bot !\n-purge : Permet de supprimé 50 messages !\n-mute (@exemple#0000) (raison) : Permet de mute une personne !\n-unmute (@exemple#0000) : Permet d'unmute une personne !`,
-			  },
-			  {
-				name: 'Les intéractions',
-				value: `ping : Le bot répond pong et dit les ms du bot\nComment vas-tu bot ? : Le bot choisit entre deux réponse aux hasard (en dévellopement) !`,
-				 },
-				 {
-					 name: 'Les ajouts',
-					 value: `Message de bienvenue et d'en revoir`,
-				 }
-			],
-			footer: {
-			  icon_url: bot.user.avatarURL,
-			  text: bot.user.username		
-		  },
-	  }})
-		console.log("Commande help demandée !");
-	}
 
-	if (message.content =="comment vas tu ?") {
-		console.log("message comment vas tu initialisé");
-		var result = Math.floor((Math.random() * 2) + 1);
-		console.log(result);
-		if (result == 1){
-			message.reply("Merci, je vais très bien !");
-		}else if (result == 2){
-	  	message.reply("Je ne vais pas très bien, merci de te soucier de moi !");
-	 		}
-		}
-	
-	if(message.content === prefix + "info") {
-		message.delete()
-        var s = (Math.round(bot.uptime / 1000) % 60)
-        var m = (Math.round(bot.uptime / (1000 * 60)) % 60)
-				var h = (Math.round(bot.uptime / (1000 * 60 * 60)))
-				var j = (Math.round(bot.uptime / (1000 * 60 * 60) % 60))
-        m = (m < 10) ? "0" + m : m;
-		s = (s < 10) ? "0" + s : s;
-		message.channel.send('', { embed: {
-			corlor: 543756,
-			author: {
-			  name: message.author.tag,
-			  icon_url: message.author.avatarURL,
-		   },
-		   title: `Information du bot`,
-		   url: '',
-		   fields: [
-			  {
-				name: `Nombres de serveurs !`, 
-				value: `${bot.guilds.size}`
-			  },
-			  {
-				name: 'Nombres de personne utilisant ce bot !',
-				value: `${bot.users.size}`
-			  },
-			  {
-				name: `Nombres de channels que le bot peut utilisé !`,
-				value: `${bot.channels.size}`
-			  },
-			  {
-				name: 'RAM !',
-				value: `${Math.ceil(process.memoryUsage().heapTotal / 1000000)}`
-			  },
-			  {
-				name: 'Uptime !',
-				value: `${j} Jours ${h} Heures ${m} Minutes ${s} Secondes`
-			  },
-			],
-			footer: {
-			  icon_url: bot.user.avatarURL,
-			  text: bot.user.username			
-		  },
-	  }})
-	  }
-
-	  if(message.content === prefix + 'up') {
-			message.delete()
-        var name = message.author.tag;
-        var icon = message.author.avatarURL;
-        var s = (Math.round(bot.uptime / 1000) % 60)
-        var m = (Math.round(bot.uptime / (1000 * 60)) % 60)
-				var h = (Math.round(bot.uptime / (1000 * 60 * 60)))
-				var j = (Math.round(bot.uptime / (1000 * 60 * 60) % 60))
-        m = (m < 10) ? "0" + m : m;
-        s = (s < 10) ? "0" + s : s;
-        message.channel.send('', { embed: {
-          color: 543756,
-          author: {
-            name: message.author.tag,
-            icon_url: message.author.avatarURL,
-          },
-          title: '',
-          url: '',
-          fields: [
-            {
-              name: 'YoyoBot UpTime',
-              value: `${j} Jours ${h} Heures ${m} Minutes ${s} Secondes`,
-              inline: true
-            },
-          ],
-          footer: {
-            icon_url: bot.user.avatarURL,
-            text: bot.user.username
-        },
-    }})
-    }
-
-	if (message.content === prefix + "niveau") {
-		message.delete()
-		var name = message.author.tag;
-		var icon = message.author.avatarURL;
-		var xp = db.get("xp").filter({user: msgauthor}).find("xp").value()
-		var xpfinal = Object.values(xp);
-		message.channel.send('', { embed: {
-		  corlor: 543756,
-		  author: {
-			name: message.author.tag,
-			icon_url: message.author.avatarURL,
-		 },
-		 title: '',
-		 url: '',
-		 fields: [
-			{
-			  name: 'XP', 
-			  value: `${xpfinal[1]}`
-			},
-		  ],
-		  footer: {
-			icon_url: bot.user.avatarURL,
-			text: bot.user.username		
-		},
 	}})
-	}
 
-	if (message.content === prefix + "nouveauté"){
-		message.delete()
-		message.channel.send('', { embed: {
-			corlor: 543756,
-			author: {
-			  name: message.author.tag,
-			  icon_url: message.author.avatarURL,
-		   },
-		   title: 'Nouveauté !',
-		   url: '',
-		   fields: [
-			  {
-				name: 'Version du bot: Alpha.', 
-				value: `Auqu'une amélioration de commande !`
-				},
-				{
-					name: 'Ajout :',
-					value: `Ajout de la commande 'flip' !\nAjout de la commande '8rall' !\nAjout de la commande 'fetenoel' !\nAjout de la commande 'say' !\nAjout de la commande 'purge' !\nAjout de la commande 'mute' !\nAjout de la commande 'unmute' !`
-				}
-			],
-			footer: {
-			  icon_url: bot.user.avatarURL,
-			  text: bot.user.username			
-		    },
-		}})
-	}
-
-	if(message.content === prefix + "invitation"){
-		message.delete()
-		message.channel.send('', { embed: {
-			color: 543756,
-			author: {
-				name: message.author.tag,
-				icon_url: message.author.avatarURL,
-			},
-			title: "Invitation du bot !",
-			url: '',
-			fields: [
-				{
-				name: `Voici l'invitation du bot !`,
-				value: `https://discordapp.com/api/oauth2/authorize?client_id=387669133304528897&permissions=2146958583&scope=bot`,
-				},
-			],
-			footer:{
-				icon_url: bot.user.avatarURL,
-				text: bot.user.username
-			},
-		}})
-	}
-
-	if(message.content === prefix + "créateur"){
-		message.delete()
-		message.channel.send('', { embed: {
-			color: 543756,
-			author: {
-				name: message.author.tag,
-				icon_url: message.author.avatarURL
-			},
-			title: "Créateur du bot !",
-			url: '',
-			fields: [
-				{
-				name: `Le créateur du bot est :`,
-				value: 'Yoyoazs#6197'
-				},
-			],
-			footer:{
-				icon_url: bot.user.avatarURL,
-				text: bot.user.username
-			},
-		}})
-	}
-
-	if (message.content === prefix + "roll") {
-		var result = Math.floor((Math.random() * 100) + 1);
-		message.reply("Votre nombre est : " + result);
-	}
-
-	if (message.content === prefix + "flip") {
-		var result = Math.floor((Math.random() * 2) + 1);
-		if (result == 1) {
-			message.reply("La pièce est tombé sur pil !");
-		} else if (result == 2) {
-			message.reply("La pièce est tombé sur face !");
-		}
-	}
-
-//  if(command === "purge") {
-    // This command removes all messages from all users in the channel, up to 100.
-    
-    // get the delete count, as an actual number.
-//    const deleteCount = parseInt(args[0], 10);
-    
-    // Ooooh nice, combined conditions. <3
-//    if(!deleteCount || deleteCount < 2 || deleteCount > 100)
- //     return message.reply("Please provide a number between 2 and 100 for the number of messages to delete");
-    
-    // So we get our messages, and delete them. Simple enough, right?
- //   const fetched = await message.channel.fetchMessages({count: deleteCount});
-  //  message.channel.bulkDelete(fetched)
-   //   .catch(error => message.reply(`Couldn't delete messages because of: ${error}`));
- // }
-
-
-var msg = message;
-if(msg.content.startsWith(prefix + 'mute')){
-		if(msg.channel.type === 'dm') return;
-		if(!msg.guild.member(msg.author).hasPermission('MANAGE_MESSAGES')){
-		return msg.reply("**:x: Vous n'avez pas la permissions d'utiliser cette commande**").catch(console.error);
-		}
-		if(msg.mentions.users.size === 0){
-		return msg.reply("**:x: Veuillez mentionner l'utilisateur que vous voulez mute**")
-		}
-		if(!msg.guild.member(bot.user).hasPermission('MANAGE_MESSAGES')){
-		return msg.reply("**:x: Je n'ai pas la permission `MANAGE_MESSAGES` pour mute cet utilisateur**").catch(console.error);
-		}
-		let muteMember = msg.guild.member(msg.mentions.users.first());
-		if(!muteMember){
-		return msg.channel.send("**:x: Cet utilisateur n'est certainement pas valide**")
-		}
-		msg.channel.overwritePermissions(muteMember, {SEND_MESSAGES: false}).then(member => {
-		msg.channel.send(`:speak_no_evil: **${muteMember.displayName}** a bien été mute ! :speak_no_evil:`);
-		})
-		}
-		if(msg.content.startsWith(prefix + 'unmute')){
-		if(msg.channel.type === 'dm') return;
-		if(!msg.guild.member(msg.author).hasPermission('MANAGE_MESSAGES')){
-		return msg.reply("**:x: Vous n'avez pas la permissions d'utiliser cette commande**").catch(console.error);
-		}
-		if(msg.mentions.users.size === 0){
-		return msg.reply("**:x: Veuillez mentionner l'utilisateur que vous voulez unmute**")
-		}
-		if(!msg.guild.member(bot.user).hasPermission('MANAGE_MESSAGES')){
-		return msg.reply("**:x: Je n'ai pas la permission `MANAGE_MESSAGES` pour unmute cet utilisateur**").catch(console.error);
-		}
-		let unmuteMember = msg.guild.member(msg.mentions.users.first());
-		if(!unmuteMember){
-		return msg.channel.send("**:x: Cet utilisateur n'est certainement pas valide**")
-		}
-		msg.channel.overwritePermissions(unmuteMember, {SEND_MESSAGES: true}).then(member => {
-		msg.channel.send(`:monkey_face: **${unmuteMember.displayName}** a bien été unmute ! :monkey_face:`);
-		})
-		}
-
-	if(command === "say") {
-		const sayMessage = arg.join(" ");
-		message.delete().catch(O_o=>{});
-		message.channel.send(sayMessage);
-	}
-
-});
-		
 function random(min, max) {
 	min = Math.ceil(0);
 	max = Math.floor(blaguenumber);
