@@ -367,6 +367,7 @@ message.channel.send(sayings[result]);
         var s = (Math.round(bot.uptime / 1000) % 60)
         var m = (Math.round(bot.uptime / (1000 * 60)) % 60)
         var h = (Math.round(bot.uptime / (1000 * 60 * 60)))
+	var j = (Math.round(bot.uptime / (1000 * 60 * 60) % 60))
         m = (m < 10) ? "0" + m : m;
 		s = (s < 10) ? "0" + s : s;
 		message.channel.send('', { embed: {
@@ -396,7 +397,7 @@ message.channel.send(sayings[result]);
 			  },
 			  {
 				name: 'Uptime !',
-				value: `${h} Heures ${m} Minutes ${s} Secondes`
+				value: `${j} Jours ${h} Heures ${m} Minutes ${s} Secondes`
 			  },
 			],
 			footer: {
