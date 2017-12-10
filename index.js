@@ -6,6 +6,7 @@ const adapter = new FileSync('database.json');
 const shopadapter = new FileSync('shop.json')
 const db = low(adapter);
 const shopdb = low(shopadapter)
+const purge = '!clearMessages';
 
 db.defaults({ blagues: [], xp: [], inventory: []}).write()
 
@@ -20,7 +21,7 @@ bot.on("ready", () => {
   console.log("Je suis pres a l'utilisation!");
 })
 
-bot.login(process.env.TOKEN);
+bot.login("Mzg3NjY5MTMzMzA0NTI4ODk3.DQxl8A.7gLdOdbSRkK-CPserFh8XkJGmjY");
 
 bot.on("guildMemberAdd", member =>{
 	member.guild.channels.find("name","welcome").channel.send(message,`Bienvenue a ${member.user.username} sur le serveur !`)
@@ -41,6 +42,7 @@ bot.on("message", (message) => {
 	let ars = cont.slice(1);
 
 	var msgauthor = message.author.tag;
+	var args = message.content.substring(prefix.length).split(" ")
 
 	if(message.author.bot)return;
 
@@ -68,7 +70,6 @@ bot.on("message", (message) => {
 	}
  
 	if (!message.content.startsWith(prefix)) return;
-	var args = message.content.substring(prefix.length).split(" ")
 
 	switch (args[0].toLowerCase()){
 
@@ -324,7 +325,7 @@ message.channel.send(sayings[result]);
 		   fields: [
 			  {
 				name: 'Les commandes', 
-				value: `-help : Affiche les commandes du bot \n -up : Voir depuis combien de temps le bot est démarer ! \n -info : Voir les info du bot ! \n -newblague (text) : Ajoute une blague a la base de donné ! \n -raconteuneblague : Le bot raconte une blagues aléatoire (en dévellopement) !\n-niveau : Affiche votre xp !\n-kick : Pour kick une personne !\n-ban : Pour ban une personne !\n-shop : Pour voir les objetc que vous pouvez acheté avec votre XP !\n-buyitem (ID): Pour acheté un objet disponible dans le shop !\n-nouveauté : Pour voir les nouveauté du bot !\n-invitation : Pour voir l'invitation du bot !\n-stats : Pour voir vos stats !\n-créateur : Pour voir le créateur du bot !\n-flip : Permet de lancé une pièce !\n-8ball : Pense a une question et la ball te réponderas !\n-fetenoel (speudo) : Fete noel a quelqu'un !\n-Say : Permet de faire dire quelque chose au bot !`,
+				value: `-help : Affiche les commandes du bot \n -up : Voir depuis combien de temps le bot est démarer ! \n -info : Voir les info du bot ! \n -newblague (text) : Ajoute une blague a la base de donné ! \n -raconteuneblague : Le bot raconte une blagues aléatoire (en dévellopement) !\n-niveau : Affiche votre xp !\n-kick : Pour kick une personne !\n-ban : Pour ban une personne !\n-shop : Pour voir les objetc que vous pouvez acheté avec votre XP !\n-buyitem (ID): Pour acheté un objet disponible dans le shop !\n-nouveauté : Pour voir les nouveauté du bot !\n-invitation : Pour voir l'invitation du bot !\n-stats : Pour voir vos stats !\n-créateur : Pour voir le créateur du bot !\n-flip : Permet de lancé une pièce !\n-8ball : Pense a une question et la ball te réponderas !\n-fetenoel (speudo) : Fete noel a quelqu'un !\n-Say (text): Permet de faire dire quelque chose au bot !\n-purge : Permet de supprimé 50 messages !\n-mute (@exemple#0000) (raison) : Permet de mute une personne !\n-unmute (@exemple#0000) : Permet d'unmute une personne !`,
 			  },
 			  {
 				name: 'Les intéractions',
@@ -358,8 +359,8 @@ message.channel.send(sayings[result]);
 		message.delete()
         var s = (Math.round(bot.uptime / 1000) % 60)
         var m = (Math.round(bot.uptime / (1000 * 60)) % 60)
-        var h = (Math.round(bot.uptime / (1000 * 60 * 60)))
-	var j = (Math.round(bot.uptime / (1000 * 60 * 60) % 60))
+				var h = (Math.round(bot.uptime / (1000 * 60 * 60)))
+				var j = (Math.round(bot.uptime / (1000 * 60 * 60) % 60))
         m = (m < 10) ? "0" + m : m;
 		s = (s < 10) ? "0" + s : s;
 		message.channel.send('', { embed: {
@@ -475,7 +476,7 @@ message.channel.send(sayings[result]);
 				},
 				{
 					name: 'Ajout :',
-					value: `Ajout de la commande 'flip' !\nAjout de la commande '8rall' !\nAjout de la commande 'fetenoel'\nAjout de la commande 'say' !`
+					value: `Ajout de la commande 'flip' !\nAjout de la commande '8rall' !\nAjout de la commande 'fetenoel' !\nAjout de la commande 'say' !\nAjout de la commande 'purge' !\nAjout de la commande 'mute' !\nAjout de la commande 'unmute' !`
 				}
 			],
 			footer: {
@@ -530,11 +531,6 @@ message.channel.send(sayings[result]);
 			},
 		}})
 	}
-	
-	if(message.content === prefix + "stop"){
-		message.delete()
-		bot
-	}
 
 	if (message.content === prefix + "roll") {
 		var result = Math.floor((Math.random() * 100) + 1);
@@ -550,26 +546,57 @@ message.channel.send(sayings[result]);
 		}
 	}
 
-	if (message.content === prefix + "purge") {
-		  async function purge() {
-				message.delete();
+	if (message.content === prefix + "purge" ) {
+		
+					if (!message.channel.permissionsFor(message.author).hasPermission("MANAGE_MESSAGES")) {
+						message.channel.sendMessage("Désolé, vous n'avez pas la permission d'exécuter la commande \""+message.content+"\"");
+						console.log("Désolé, vous n'avez pas la permission d'exécuter la commande \""+message.content+"\"");
+						return;
+					} else if (!message.channel.permissionsFor(bot.user).hasPermission("MANAGE_MESSAGES")) {
+						message.channel.sendMessage(" \""+message.content+"\"");
+						console.log("Désolé, je n'ai pas la permission d'exécuter la commande \""+message.content+"\"");
+						return;
+					}
 
-				if (isNaN(ars[0])) {
+					if (message.channel.type == 'text') {
+						message.channel.fetchMessages()
+							.then(messages => {
+								message.channel.bulkDelete(messages);
+								messagesDeleted = messages.array().length; 
 
-					message.channel.send("Merci de spécifié un argument. \n Utilisation " + prefix + `purge <nombre>`);
-					return;
+								message.channel.sendMessage("Suppression des messages réussie. Nombre total de messages supprimés: "+messagesDeleted);
+								console.log('Suppression des messages réussie. Nombre total de messages supprimés: '+messagesDeleted)
+							})
+							.catch(err => {
+								console.log('Error while doing Bulk Delete');
+								console.log(err);
+							});
+					}
 				}
+			
 
-				const fetched = await message.channel.fetchMessage({limit: ars[0]});
-				console.log(fetched.size + ` messages found, deleting...`)
+if (command == "mute") { 
+	if (!message.member.roles.some(r=>["bot-admin"].includes(r.name)) ) return message.reply("Désolé, vous n'avez pas les permissions de mute !");
+	var mutedmember = message.mentions.members.first(); 
+	if (!mutedmember) return message.reply("Merci de bien voulloir sélectionné une personne sur se serveur !") 
+	if (mutedmember.hasPermission("ADMINISTRATOR")) return message.reply("Je ne peut pas mute cette personne !") 
+	var mutereasondelete = 10 + mutedmember.user.id.length 
+	var mutereason = message.content.substring(mutereasondelete).split(" "); 
+	var mutereason = mutereason.join(" ");
+	if (!mutereason) return message.reply("Merci d'indiquer la réson du mute !") 
+	mutedmember.addRole(mutedrole) 
+			.catch(error => message.reply(`Désolé ${message.author} Je ne peut pas mute en raison de: ${error}`)); 
+	message.reply(`${mutedmember.user} a étais mute par ${message.author} pour: ${mutereason}`); 
+}
 
-				message.channel.bulkDelete(fetched)
-					.cathc(error => message.channel.send(`Error: ${error}`));
-			}
-
-			purge();
-
-	}
+if (command == "unmute") {
+	if (!message.member.roles.some(r=>["bot-admin"].includes(r.name)) ) return message.reply("Désolé, vous n'avez par les permissons d'unmute !");
+	var unmutedmember = message.mentions.members.first();
+	if (!unmutedmember) return message.reply("Merci de bien voulloir sélectionné une personne sur se serveur !") 
+	unmutedmember.removeRole(mutedrole) 
+			.catch(error => message.reply(`Désolé ${message.author} je ne peut pas unmute en raison de : ${error}`)); 
+	message.reply(`${unmutedmember.user} a étais unmute par ${message.author}!`); 
+}
 
 	if(command === "say") {
 		const sayMessage = arg.join(" ");
