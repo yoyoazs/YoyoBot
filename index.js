@@ -76,7 +76,7 @@ bot.on("message", (message) => {
 		   fields: [
 			  {
 				name: 'Les commandes', 
-				value: `-help : Affiche les commandes du bot \n -up : Voir depuis combien de temps le bot est démarer ! \n -info : Voir les info du bot ! \n -newblague (text) : Ajoute une blague a la base de donné ! \n -raconteuneblague : Le bot raconte une blagues aléatoire (en dévellopement) !\n-niveau : Affiche votre xp !\n-kick : Pour kick une personne !\n-ban : Pour ban une personne !\n-shop : Pour voir les objetc que vous pouvez acheté avec votre XP !\n-buyitem (ID): Pour acheté un objet disponible dans le shop !\n-nouveauté : Pour voir les nouveauté du bot !\n-invitation : Pour voir l'invitation du bot !\n-stats : Pour voir vos stats !\n-créateur : Pour voir le créateur du bot !\n-flip : Permet de lancé une pièce !\n-8ball : Pense a une question et la ball te réponderas !\n-fetenoel (speudo) : Fete noel a quelqu'un !\n-Say (text): Permet de faire dire quelque chose au bot !\n-purge : Permet de supprimé 50 messages !\n-mute (@exemple#0000) (raison) : Permet de mute une personne !\n-unmute (@exemple#0000) : Permet d'unmute une personne !`,
+				value: `-help : Affiche les commandes du bot \n -up : Voir depuis combien de temps le bot est démarer ! \n -info : Voir les info du bot ! \n -newblague (text) : Ajoute une blague a la base de donné ! \n -raconteuneblague : Le bot raconte une blagues aléatoire (en dévellopement) !\n-niveau : Affiche votre xp !\n-kick : Pour kick une personne !\n-ban : Pour ban une personne !\n-shop : Pour voir les objetc que vous pouvez acheté avec votre XP !\n-buyitem (ID): Pour acheté un objet disponible dans le shop !\n-nouveauté : Pour voir les nouveauté du bot !\n-invitation : Pour voir l'invitation du bot !\n-stats : Pour voir vos stats !\n-créateur : Pour voir le créateur du bot !\n-flip : Permet de lancé une pièce !\n-8ball : Pense a une question et la ball te réponderas !\n-fetenoel (speudo) : Fete noel a quelqu'un !\n-Say (text): Permet de faire dire quelque chose au bot !\n-purge : Permet de supprimé 50 messages !\n-mute (@exemple#0000) (raison) : Permet de mute une personne !\n-unmute (@exemple#0000) : Permet d'unmute une personne !\n-Roultte : Fonctionne comme la roulette au casino !`,
 			  },
 			  {
 				name: 'Les intéractions',
@@ -223,11 +223,11 @@ bot.on("message", (message) => {
 		   fields: [
 			  {
 				name: 'Version du bot: Alpha.', 
-				value: `Auqu'une amélioration de commande !`
+				value: `J'affiche maintenant le nombre de jours aux uptime !\nJe peut aussi resté allumé indéfiniment !`
 				},
 				{
 					name: 'Ajout :',
-					value: `Ajout de la commande 'flip' !\nAjout de la commande '8rall' !\nAjout de la commande 'fetenoel' !\nAjout de la commande 'say' !\nAjout de la commande 'purge' !\nAjout de la commande 'mute' !\nAjout de la commande 'unmute' !`
+					value: `Ajout de la commande 'flip' !\nAjout de la commande '8rall' !\nAjout de la commande 'fetenoel' !\nAjout de la commande 'say' !\nAjout de la commande 'purge' !\nAjout de la commande 'mute' !\nAjout de la commande 'unmute' !\nAjout de la commande 'roulette' !`
 				}
 			],
 			footer: {
