@@ -62,7 +62,7 @@ bot.on("message", (message) => {
 	}
 
   if (message.content.startsWith("ping")) {
-	  message.channel.send(`pong! Mon ping est de : ${Date.now() - message.createdTimestamp} ms`);
+	  message.channel.send(`:ping_pong: pong! Mon ping est de : ${Date.now() - message.createdTimestamp} ms`);
 	  console.log("ping pong");
 	
 	}
@@ -91,14 +91,6 @@ bot.on("message", (message) => {
 		var blague = db.get(`blagues[${result}].blague_value`).toString().value();
 		var author_blague = db.get(`blagues [${result}].blague_author`).toString().value();
 		message.channel.send(`Voici une blague : ${blague} \n(Blague de ${author_blague}) `);
-
-		//blague_random();
-		//console.log(randnum)
-
-		//var blague = db.get(`blagues[${randnum}].blague_value`).toString().value();
-		//var author_blague = db.get(`blagues [${randnum}].blague_author`).toString().value();
-		//console.log(blague);
-		//message.channel.send(`Voici une blague : ${blague} \n(Blague de ${author_blague})`)
 
 		break;
 
