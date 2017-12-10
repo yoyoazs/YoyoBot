@@ -1,0 +1,10 @@
+{
+    "shop_items":[
+        {
+            "itemID": "item0001",
+            "name": "TEST",
+            "desc": "Ceci est un test non certifié !",
+            "price": "2"
+        }
+    ]
+}
