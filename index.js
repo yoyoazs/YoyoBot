@@ -281,6 +281,74 @@ bot.on("message", (message) => {
 			},
 		}})
 	}
+	
+		if (message.content === prefix + "rollprems") {
+		var result = Math.floor((Math.random() * 100000000) + 1);
+		var result2 = Math.round(result / 2)
+		var result3 = Math.round(result / 3)
+		var result4 = Math.round(result / 4)
+		var result5 = Math.round(result / 5)
+		var result6 = Math.round(result / 6)
+		var result7 = Math.round(result / 7)
+		var result8 = Math.round(result / 8)
+		var result9 = Math.round(result / 9)
+		var result10 = Math.round(result / 10)
+		message.channel.send('', { embed: {
+			corlor: 543756,
+			author: {
+			  name: message.author.tag,
+			  icon_url: message.author.avatarURL,
+		   },
+		   title: 'Gérérateur de chiffre pour avoir la chance de trouvé un chiffre premier !',
+		   url: '',
+		   fields: [
+			  {
+				name: 'Ton chiffre:',
+				value: result 
+			  },
+			  {
+				name: 'Ton chiffre divisé par 2:',
+				value: result2
+			  },
+			  {
+				name: 'Ton chiffre divisé par 3:',
+				value: result3
+			  },
+			  {
+				name: 'Ton chiffre divisé par 4:',
+				value: result4
+			  },
+			  {
+			  name: 'Ton chiffre divisé par 5:',
+			  value: result5
+			  },
+			  {
+				  name: 'Ton chiffre divisé par 6:',
+				  value: result6
+			  },
+			  {
+				  name: 'Ton chiffre divisé par 7:',
+				  value: result7
+			  },
+			  {
+				  name: 'Ton chiffre divisé par 8:',
+				  value: result8
+			  },
+			  {
+				  name: 'Ton chiffre divisé par 9:',
+				value: result9
+			  },
+			  {
+				  name: 'Ton chiffre divisé par 10:',
+				  value: result10
+			  },
+			],
+			footer: {
+			  icon_url: bot.user.avatarURL,
+			  text: bot.user.username			
+		    },
+		}})
+	}
 
 	if (message.content === prefix + "roll") {
 		var result = Math.floor((Math.random() * 100) + 1);
@@ -521,21 +589,12 @@ if(msg.content.startsWith(prefix + 'mute')){
 					"rouge",
 					"vert",
 					"noir",
+					"rouge",
 					"noir",
 					"rouge"]
 					}
 var result = Math.floor((Math.random() * sayings1.length) + 0);
 message.channel.send(sayings1[result1]);
-						if (result1 == 2){
-							var sayings2 = ["noir",
-							"rouge",
-							"vert",
-							"noir",
-							"noir",
-							"rouge"]
-		var result = Math.floor((Math.random() * sayings2.length) + 0);
-		message.channel.send(sayings2[result1]);
-						}
 					
 					break;
 
