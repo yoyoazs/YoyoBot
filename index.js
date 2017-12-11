@@ -515,8 +515,8 @@ if(msg.content.startsWith(prefix + 'mute')){
 					break;
 
 					case "roulette":
-					var result1 = Math.floor((Math.random() * 2) + 1);
-					if (result1 = 1){
+					var result1 = Math.floor((Math.random() * 2) + 1) 
+					if (result1 == 1){
 					var sayings1 = ["noir",
 					"rouge",
 					"vert",
@@ -525,8 +525,8 @@ if(msg.content.startsWith(prefix + 'mute')){
 					"rouge"]
 					}
 var result = Math.floor((Math.random() * sayings1.length) + 0);
-message.channel.send(sayings[result]);
-						if (result = 2){
+message.channel.send(sayings1[result1]);
+						if (result1 == 2){
 							var sayings2 = ["noir",
 							"rouge",
 							"vert",
@@ -534,7 +534,7 @@ message.channel.send(sayings[result]);
 							"noir",
 							"rouge"]
 		var result = Math.floor((Math.random() * sayings2.length) + 0);
-		message.channel.send(sayings[result]);
+		message.channel.send(sayings2[result1]);
 						}
 					
 					break;
