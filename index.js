@@ -515,28 +515,28 @@ if(msg.content.startsWith(prefix + 'mute')){
 					break;
 
 					case "roulette":
-					var result1 = Math.floor((Math.random() * 2) + 1){
+					var result1 = Math.floor((Math.random() * 2) + 1);
 					if (result1 = 1){
-					var sayings = ["noir",
+					var sayings1 = ["noir",
 					"rouge",
 					"vert",
 					"noir",
 					"noir",
 					"rouge"]
 					}
-var result = Math.floor((Math.random() * sayings.length) + 0);
+var result = Math.floor((Math.random() * sayings1.length) + 0);
 message.channel.send(sayings[result]);
 						if (result = 2){
-							var sayings = ["noir",
+							var sayings2 = ["noir",
 							"rouge",
 							"vert",
 							"noir",
 							"noir",
 							"rouge"]
-		var result = Math.floor((Math.random() * sayings.length) + 0);
+		var result = Math.floor((Math.random() * sayings2.length) + 0);
 		message.channel.send(sayings[result]);
 						}
-					}
+					
 					break;
 
 					case "8ball":
