@@ -1,6 +1,11 @@
 const Discord = require("discord.js");
 const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
+const weather = require("weather-js");
+const Wiki = require("wikijs");
+//var yt = require("./youtube_plugin");
+//var youtube_plugin = new yt();
+//var AuthDetails = require("./auth.json");
 
 const adapter = new FileSync('database.json');
 const shopadapter = new FileSync('shop.json')
@@ -94,6 +99,10 @@ bot.on("message", (message) => {
 		console.log("Commande help demandée !");
 	}
 
+	if(message.content.startsWith(prefix + 'botname')){
+		bot.user.setUsername(message.content.substr(9));
+	}
+
 	if (message.content =="comment vas tu ?") {
 		console.log("message comment vas tu initialisé");
 		var result = Math.floor((Math.random() * 2) + 1);
@@ -110,9 +119,12 @@ bot.on("message", (message) => {
 		var s = (Math.round(bot.uptime / 1000) % 60)
 		var m = (Math.round(bot.uptime / (1000 * 60)) % 60)
 		var h = (Math.round(bot.uptime / (1000 * 60 * 60)))
-		var j  = Math.round(bot.uptime / (1000 * 60 * 60 * 24));
+		var j = (Math.round(bot.uptime / (1000 * 60 * 60 * 24)))
+		var m = (Math.round(bot.uptime / (1000 * 60 * 60 * 24 * 30 )))
 		m = (m < 10) ? "0" + m : m;
-    s = (s < 10) ? "0" + s : s;
+		s = (s < 10) ? "0" + s : s;
+		h = (h < 10) ? "0" + h : h;
+		j = (j < 10) ? "0" + j : j;
 	message.channel.send('', { embed: {
 	corlor: 543756,
 	author: {
@@ -123,24 +135,24 @@ bot.on("message", (message) => {
 	 url: '',
 	 fields: [
 		{
-		name: `Nombres de serveurs !`, 
+		name: `Nombres de serveurs :`, 
 		value: `${bot.guilds.size}`
 		},
 		{
-		name: 'Nombres de personne utilisant ce bot !',
+		name: 'Nombres de personne utilisant ce bot :',
 		value: `${bot.users.size}`
 		},
 		{
-		name: `Nombres de channels que le bot peut utilisé !`,
+		name: `Nombres de channels que le bot peut utilisé :`,
 		value: `${bot.channels.size}`
 		},
 		{
-		name: 'RAM !',
+		name: 'RAM :',
 		value: `${Math.ceil(process.memoryUsage().heapTotal / 1000000)}`
 		},
 		{
 		name: 'Uptime !',
-		value: `${j} Jours ${h} Heures ${m} Minutes ${s} Secondes`
+		value: `${m} Mois ${j} Jours ${h} Heures ${m} Minutes ${s} Secondes`
 		},
 	],
 	footer: {
@@ -156,10 +168,13 @@ bot.on("message", (message) => {
         var icon = message.author.avatarURL;
         var s = (Math.round(bot.uptime / 1000) % 60)
         var m = (Math.round(bot.uptime / (1000 * 60)) % 60)
-		var h = (Math.round(bot.uptime / (1000 * 60 * 60)))
-		var j  = Math.round(bot.uptime / (1000 * 60 * 60 * 24));
+				var h = (Math.round(bot.uptime / (1000 * 60 * 60)))
+				var j = (Math.round(bot.uptime / (1000 * 60 * 60 * 24)))
+				var m = (Math.round(bot.uptime / (1000 * 60 * 60 * 24 *30)));
         m = (m < 10) ? "0" + m : m;
-        s = (s < 10) ? "0" + s : s;
+				s = (s < 10) ? "0" + s : s;
+				h = (h < 10) ? "0" + h : h;
+				j = (j < 10) ? "0" + j : j;
         message.channel.send('', { embed: {
           color: 543756,
           author: {
@@ -171,7 +186,7 @@ bot.on("message", (message) => {
           fields: [
             {
               name: 'YoyoBot UpTime',
-              value: `${j} Jours ${h} Heures ${m} Minutes ${s} Secondes`,
+              value: `${m} Mois ${j} Jours ${h} Heures ${m} Minutes ${s} Secondes`,
               inline: true
             },
           ],
@@ -180,18 +195,18 @@ bot.on("message", (message) => {
             text: bot.user.username
         },
     }})
-    }
+	}
 
 	if (message.content === prefix + "niveau") {
-		message.delete()
-		var name = message.author.tag;
+		var value = message.content.substr(9);
+		var name = value;
 		var icon = message.author.avatarURL;
-		var xp = db.get("xp").filter({user: msgauthor}).find("xp").value()
+		var xp = db.get("xp").filter({user: name}).find("xp").value()
 		var xpfinal = Object.values(xp);
 		message.channel.send('', { embed: {
 		  corlor: 543756,
 		  author: {
-			name: message.author.tag,
+			name: name,
 			icon_url: message.author.avatarURL,
 		 },
 		 title: '',
@@ -281,8 +296,13 @@ bot.on("message", (message) => {
 			},
 		}})
 	}
-	
-		if (message.content === prefix + "rollprems") {
+
+	if (message.content === prefix + "roll"){
+		var result = Math.floor((Math.random() * 100 ) + 1);
+		message.reply(result)
+	}
+
+	if (message.content === prefix + "rollprems") {
 		var result = Math.floor((Math.random() * 100000000) + 1);
 		var result2 = Math.round(result / 2)
 		var result3 = Math.round(result / 3)
@@ -323,24 +343,24 @@ bot.on("message", (message) => {
 			  value: result5
 			  },
 			  {
-				  name: 'Ton chiffre divisé par 6:',
-				  value: result6
+				name: 'Ton chiffre divisé par 6:',
+			 	value: result6
 			  },
 			  {
-				  name: 'Ton chiffre divisé par 7:',
-				  value: result7
+				name: 'Ton chiffre divisé par 7:',
+				value: result7
 			  },
 			  {
-				  name: 'Ton chiffre divisé par 8:',
-				  value: result8
+				name: 'Ton chiffre divisé par 8:',
+				value: result8
 			  },
 			  {
-				  name: 'Ton chiffre divisé par 9:',
+				 name: 'Ton chiffre divisé par 9:',
 				value: result9
 			  },
 			  {
-				  name: 'Ton chiffre divisé par 10:',
-				  value: result10
+				name: 'Ton chiffre divisé par 10:',
+				value: result10
 			  },
 			],
 			footer: {
@@ -349,12 +369,7 @@ bot.on("message", (message) => {
 		    },
 		}})
 	}
-
-	if (message.content === prefix + "roll") {
-		var result = Math.floor((Math.random() * 100) + 1);
-		message.reply("Tu est tombé sur  " + result);
-	}
-
+	  
 	if (message.content === prefix + "flip") {
 		var result = Math.floor((Math.random() * 2) + 1);
 		if (result == 1) {
@@ -589,12 +604,21 @@ if(msg.content.startsWith(prefix + 'mute')){
 					"rouge",
 					"vert",
 					"noir",
-					"rouge",
 					"noir",
 					"rouge"]
-					}
 var result = Math.floor((Math.random() * sayings1.length) + 0);
 message.channel.send(sayings1[result1]);
+					}
+						if (result1 == 2){
+							var sayings2 = ["noir",
+							"rouge",
+							"vert",
+							"noir",
+							"noir",
+							"rouge"]
+		var result = Math.floor((Math.random() * sayings2.length) + 0);
+		message.channel.send(sayings2[result1]);
+						}
 					
 					break;
 
@@ -627,6 +651,7 @@ message.channel.send(sayings[result]);
 				break;
 
 		case "stats":
+
 			var userXpDB = db.get("xp").filter({user: msgauthor}).find("xp").value();
 			var userxp = Object.values(userXpDB);
 			var inventoryDb = db.get("inventory").filter({user: msgauthor}).find("items").value();
@@ -663,9 +688,63 @@ message.channel.send(sayings[result]);
 						text: bot.user.username,		
 					},
 				}})
+			
 			break;
 
-	}})
+			case "fetenoel":
+			message.delete()
+				var speudo = message.content.substr(11);
+						message.channel.send('', { embed: {
+			color: 543756,
+			author: {
+				name: message.author.tag,
+				icon_url: message.author.avatarURL
+			},
+			title: '',
+			url: '',
+			fields: [
+				{
+				name: `Souhaite un joyeux noel a`,
+				value: speudo,
+				},
+			  {
+				name: `Si vous voullez faire de même`,
+				value: `faite y/fetenoel @` + message.author.username,
+				},
+			],
+			footer:{
+				icon_url: bot.user.avatarURL,
+				text: bot.user.username
+			},
+		}})
+
+			break;
+
+		 case "méteo":
+				var location = message.content.substr(6);
+				var unit = "C";
+				
+				try {
+					weather.find({search: location, degreeType: unit}, function(err, data) {
+						if (data.length === 0) {
+							message.channel.send('**Veuillez entrer une localisation valide**') 
+							return; 
+						}
+						if(err) {
+							message.channel.send("\n" + `Je ne peut pas trouvé d'information pour la méteo de  ${location}`);
+						   } else {
+							data = data[0];
+		
+						   message.channel.send("\n" + "**" + data.location.name + " Maintenant : **\n" + data.current.temperature + "°" + unit + " " + data.current.skytext + ", ressentie " + data.current.feelslike + "°, " + data.current.winddisplay + " Vent\n\n**Prévisions pour demain :**\nHaut: " + data.forecast[1].high + "°, Bas: " + data.forecast[1].low + "° " + data.forecast[1].skytextday + " avec " + data.forecast[1].precip + "% de chance de precipitation.");
+						}
+					});
+				} catch(err) {
+					console.log(Date.now(), "ERREUR", "Weather.JS a rencontré une erreur");
+					message.reply("Idk pourquoi c'est cassé tbh :(");
+					}
+				}
+
+	});
 
 function random(min, max) {
 	min = Math.ceil(0);
