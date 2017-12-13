@@ -660,7 +660,7 @@ message.channel.send(sayings[result]);
 					],
 					footer: {
 						icon_url: bot.user.avatarURL,
-						text: `bot.user.username`,		
+						text: bot.user.username,		
 					},
 				}})
 			break;
