@@ -24,13 +24,13 @@ bot.on("ready", () => {
 
 bot.login(bot.login(process.env.TOKEN));
 
-bot.on("guildMemberAdd", member =>{
-	member.guild.channels.find("name","welcome").channel.send(message,`Bienvenue a ${member.user.username} sur le serveur !`)
-})
+//bot.on("guildMemberAdd", member =>{
+//	member.guild.channels.find("name","welcome").channel.send(message,`Bienvenue a ${member.user.username} sur le serveur !`)
+//})
 
-bot.on("guildMemberRemove", member =>{
-	member.guild.channels.find("name","welcome").channel.send(`:rocket: ${member.user.username} viens de quitter le serveur !`)
-})
+//bot.on("guildMemberRemove", member =>{
+//	member.guild.channels.find("name","welcome").channel.send(`:rocket: ${member.user.username} viens de quitter le serveur !`)
+//})
 
 bot.on("message", (message) => {
 
