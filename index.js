@@ -627,63 +627,42 @@ message.channel.send(sayings[result]);
 				break;
 
 		case "stats":
-		message.delete()
-
 			var userXpDB = db.get("xp").filter({user: msgauthor}).find("xp").value();
 			var userxp = Object.values(userXpDB);
-
-			message.channel.send('', { embed: {
-				corlor: 543756,
-				author: {
-				  name: message.author.tag,
-				  icon_url: message.author.avatarURL,
-			   },
-			   title: `Vos stats !`,
-			   url: '',
-			   fields: [
-				  {
-					name: `Votre XP !`, 
-					value: `${userxp[1]} XP`,
-				  },
-				  {
-					name: 'Votre ID',
-					value: `message.author.id`,
-				  },
-				],
-				footer: {
-				  icon_url: bot.user.avatarURL,
-				  text: `bot.user.username`,		
-			  },
-			}})
-			break;
-			
-			case "fetenoel":
-			message.delete()
-				var speudo = message.content.substr(11);
-						message.channel.send('', { embed: {
-			color: 543756,
-			author: {
-				name: message.author.tag,
-				icon_url: message.author.avatarURL
-			},
-			title: '',
-			url: '',
-			fields: [
-				{
-				name: `Souhaite un joyeux noel a`,
-				value: speudo,
-				},
-			  {
-				name: `Si vous voullez faire de même`,
-				value: `faite y/fetenoel @` + message.author.username,
-				},
-			],
-			footer:{
-				icon_url: bot.user.avatarURL,
-				text: bot.user.username
-			},
-		}})
-
+			var inventoryDb = db.get("inventory").filter({user: msgauthor}).find("items").value();
+			var inventory = Object.values(inventoryDb);
+			var userCreateDate = message.author.createdAt.toString().split(' ');
+				message.channel.send('', { embed: {
+					corlor: 543756,
+					author: {
+						name: message.author.tag,
+						icon_url: message.author.avatarURL,
+					 },
+					 title: `Vos stats :`,
+					 url: '',
+					 fields: [
+						{
+						name: `Votre XP :`, 
+						value: `${userxp[1]} XP`,
+						},
+						{
+						name: 'Votre ID :',
+						value: `message.author.id`,
+						},
+						{
+							name: 'Inventaire :',
+							value: inventory[1],
+						},
+						{
+							name: `Date de création de l'utilisateur :`,
+							value: userCreateDate[1] + ', ' + userCreateDate[2] + ', ' + userCreateDate[3] ,
+						}
+					],
+					footer: {
+						icon_url: bot.user.avatarURL,
+						text: `bot.user.username`,		
+					},
+				}})
 			break;
 
 	}})
