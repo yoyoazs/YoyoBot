@@ -647,7 +647,7 @@ message.channel.send(sayings[result]);
 						},
 						{
 						name: 'Votre ID :',
-						value: `message.author.id`,
+						value: message.author.id,
 						},
 						{
 							name: 'Inventaire :',
