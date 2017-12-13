@@ -18,6 +18,8 @@
     "opus": "0.0.0",
     "rethinkdb": "^2.3.3",
     "simple-youtube-api": "^5.0.0",
+    "weather-js": "^2.0.0",
+    "wikijs": "^4.5.0",
     "wolfram": "^0.3.4",
     "ytdl-core": "^0.18.3"
   },
