@@ -3,16 +3,28 @@ const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
 const weather = require("weather-js");
 const Wiki = require("wikijs");
-//var yt = require("./youtube_plugin");
-//var youtube_plugin = new yt();
-//var AuthDetails = require("./auth.json");
+const express = require("express");
+var app = express();
+var yt = require("./youtube_plugin");
+var youtube_plugin = new yt();
+var AuthDetails = require("./auth.json");
+var RedisSessions = require("redis-sessions");
+var rs = new RedisSessions();
+var Music = require("./Music.js");
+var functionHelper = require('./functionHelpers.js');
+var ffmpeg = require("ffmpeg");
+var search = require('youtube-search'),
+music = new Music();
 
 const adapter = new FileSync('database.json');
 const shopadapter = new FileSync('shop.json')
 const config = new FileSync('config.json')
 const db = low(adapter);
 const shopdb = low(shopadapter)
-const purge = '!clearMessages';
+const opts = {
+	maxResults: 3,
+	key: AuthDetails.youtube_api_key
+  };
 
 db.defaults({ blagues: [], xp: [], inventory: []}).write()
 
@@ -28,15 +40,6 @@ bot.on("ready", () => {
 })
 
 bot.login(bot.login(process.env.TOKEN));
-
-//bot.on("guildMemberAdd", member =>{
-//	member.guild.channels.find("name","welcome").channel.send(message,`Bienvenue a ${member.user.username} sur le serveur !`)
-//})
-
-//bot.on("guildMemberRemove", member =>{
-//	member.guild.channels.find("name","welcome").channel.send(`:rocket: ${member.user.username} viens de quitter le serveur !`)
-//})
-
 bot.on("message", (message) => {
 
 	const arg = message.content.slice(prefix.length).trim().split(/ +/g);
@@ -102,6 +105,50 @@ bot.on("message", (message) => {
 	if(message.content.startsWith(prefix + 'botname')){
 		bot.user.setUsername(message.content.substr(9));
 	}
+
+	if (message.content.startsWith(prefix + "wiki")){
+		if(!message.content.substr(5)) {
+			console.log(Date.now(), "DANGER", "Vous devez fournir un terme de recherche.");
+			message.reply("Vous devez fournir un terme de recherche.");
+			return;
+		}
+		var wiki = new Wiki.default();
+		wiki.search(message.content.substr(5)).then(function(data) {
+			if(data.results.length==0) {
+				console.log(Date.now(), "DANGER","Wikipedia ne trouve pas ce que vous avez demandée : " + message.content.substr(5));
+				message.reply("Je ne peut trouvé ce que vous voulez dans Wikipedia :(");
+				return;
+			}
+			wiki.page(data.results[0]).then(function(page) {
+				page.summary().then(function(summary) {
+					if(summary.indexOf(" may refer to:") > -1 || summary.indexOf(" may stand for:") > -1) {
+						var options = summary.split("\n").slice(1);
+						var info = "Selectioné une options parmis celle-ci :";
+						for(var i=0; i<options.length; i++) {
+							info += "\n\t" + i + ") " + options[i];
+						}
+						message.reply(info);
+						selectMenu(message.channel, message.author.id, function(i) {
+							commands.wiki.process(Client, message, options[i].substring(0, options[i].indexOf(",")));
+						}, options.length-1);
+					} else {
+						var sumText = summary.split("\n");
+						var count = 0;
+						var continuation = function() {
+							var paragraph = sumText.shift();
+							if(paragraph && count<3) {
+								count++;
+								message.reply(message.channel, paragraph, continuation);
+							}
+						};
+						message.reply("**Trouvé " + page.raw.fullurl + "**", continuation);
+					}
+				});
+			});
+		}, function(err) {
+			console.log(Date.now(), "ERREUR","Impossible de se connecté a Wikipédia");
+			message.reply("Uhhh...Something went wrong :(");
+		})}
 
 	if (message.content =="comment vas tu ?") {
 		console.log("message comment vas tu initialisé");
@@ -302,74 +349,7 @@ bot.on("message", (message) => {
 		message.reply(result)
 	}
 
-	if (message.content === prefix + "rollprems") {
-		var result = Math.floor((Math.random() * 100000000) + 1);
-		var result2 = Math.round(result / 2)
-		var result3 = Math.round(result / 3)
-		var result4 = Math.round(result / 4)
-		var result5 = Math.round(result / 5)
-		var result6 = Math.round(result / 6)
-		var result7 = Math.round(result / 7)
-		var result8 = Math.round(result / 8)
-		var result9 = Math.round(result / 9)
-		var result10 = Math.round(result / 10)
-		message.channel.send('', { embed: {
-			corlor: 543756,
-			author: {
-			  name: message.author.tag,
-			  icon_url: message.author.avatarURL,
-		   },
-		   title: 'Gérérateur de chiffre pour avoir la chance de trouvé un chiffre premier !',
-		   url: '',
-		   fields: [
-			  {
-				name: 'Ton chiffre:',
-				value: result 
-			  },
-			  {
-				name: 'Ton chiffre divisé par 2:',
-				value: result2
-			  },
-			  {
-				name: 'Ton chiffre divisé par 3:',
-				value: result3
-			  },
-			  {
-				name: 'Ton chiffre divisé par 4:',
-				value: result4
-			  },
-			  {
-			  name: 'Ton chiffre divisé par 5:',
-			  value: result5
-			  },
-			  {
-				name: 'Ton chiffre divisé par 6:',
-			 	value: result6
-			  },
-			  {
-				name: 'Ton chiffre divisé par 7:',
-				value: result7
-			  },
-			  {
-				name: 'Ton chiffre divisé par 8:',
-				value: result8
-			  },
-			  {
-				 name: 'Ton chiffre divisé par 9:',
-				value: result9
-			  },
-			  {
-				name: 'Ton chiffre divisé par 10:',
-				value: result10
-			  },
-			],
-			footer: {
-			  icon_url: bot.user.avatarURL,
-			  text: bot.user.username			
-		    },
-		}})
-	}
-	  
+  
 	if (message.content === prefix + "flip") {
 		var result = Math.floor((Math.random() * 2) + 1);
 		if (result == 1) {
@@ -425,18 +405,12 @@ if(msg.content.startsWith(prefix + 'mute')){
 		message.channel.send(sayMessage);
 	}
 
-//	bot.on('message', function(message) {
-//		if(msg.content.startsWith(prefix + 'clear')){
- //       if (message.member.hasPermission("MANAGE_MESSAGES")) {
-  //          message.channel.fetchMessages()
-   //            .then(function(list){
-    //                message.channel.bulkDelete(list);
-     //           }, function(err){message.channel.send("ERROR: ERROR CLEARING CHANNEL.")})                        
-      //  }
-   // }
-
-//});
-
+	if (message.content.startsWith('!youtube')){
+		youtube_plugin.respond(message.content, message.channel , client);
+		}
+	
+		
+	
   if (message.content.startsWith("ping")) {
 		message.channel.send(`:ping_pong: pong! Mon ping est de : ${Date.now() - message.createdTimestamp} ms`);
 	  console.log("ping pong");
@@ -744,7 +718,116 @@ message.channel.send(sayings[result]);
 					}
 				}
 
-	});
+	})
+
+////////////////////////////////////////////////////////////////////////
+var messages = [];
+bot.on("message", (message) => {
+music.setVoiceChannel(message.member.voiceChannel);
+var array_msg = message.content.split(' ');
+		messages.push(message);
+		switch (array_msg[0]) {
+	case ("y/play") :
+		console.log("Play");
+		message.delete(message.author);
+		if (!music.getVoiceChannel()) return message.reply("Veuillez vous connectez en vocal !");
+		if (music.getTab(0) == null) return message.reply('Aucune musique, merci d\' en ajouté.');
+		else music.voice();
+		break;
+	case ("y/pause") :
+		console.log("Pause");
+		message.delete(message.author);
+		if (!music.getVoiceChannel()) return message.reply("Veuillez vous connectez en vocal !");
+		if (music.getTab(0) == null) return message.reply('Aucune musique, merci d\' en ajouté.');
+		music.pause();
+		break;
+	case ("y/resume") :
+		console.log("Resume");
+		message.delete(message.author);
+		if (!music.getVoiceChannel()) return message.reply("Veuillez vous connectez en vocal !");
+		if (music.getTab(0) == null) return message.reply('Aucune musique, merci d\' en ajouté.');
+		music.resume();
+		break;
+	case ("y/stop") :
+		console.log("Stop");
+		message.delete(message.author);
+		if (!music.getVoiceChannel()) return message.reply("Veuillez vous connectez en vocal !");
+		if (music.getTab(0) == null) return message.reply('Aucune musique, merci d\' en ajouté.');
+		else music.stop();
+		message.reply("La queue à était vidé !");
+		break;
+	case ("y/add") :
+		console.log("Add");
+		message.delete(message.author);
+		var link = message.content.split(' ');
+		link.shift();
+		link = link.join(' ');
+		search(link, opts, function(err, results) {
+			if(err) return console.log(err);
+			for (var y = 0; results[y].kind == 'youtube#channel'; y++);
+			message.channel.sendMessage(results[y].link);
+			music.setTabEnd(results[y].link);
+		});
+		break;
+	case ("y/link") :
+		console.log("Link");
+		message.delete(message.author);
+		var link = message.content.split(' ');
+		link.shift();
+		link = link.join(' ');
+		console.log(link);
+		music.setTabEnd(link);
+		break;
+	case ("y/volume") :
+		console.log("Volume");
+		message.delete(message.author);
+		var link = message.content.split(' ');
+		link.shift();
+		link = link.join(' ');
+		music.volume(link/100);
+		message.reply("le volume et maintenant à :" + link);
+		break;
+	case ("y/next") :
+		console.log("Next");
+		message.delete(message.author);
+		if (music.getI() < music.getLengthTab()) music.setI(this.i + 1);
+		if (music.getI() >= music.getLengthTab()) music.setI(0);
+		music.next();
+		break;
+}	if (message.content === ("test")){
+message.reply('test !');
+}else if (message.content.startsWith("!say")){
+message.delete(message.author);
+var say = message.content.substr(5);
+message.reply(say);
+}
+
+if (message.content === ("y/channel")){
+const data = client.channels.get(message.channel.id);
+moment.locale("fr");
+var temps = moment(data.createdTimestamp).format("LLLL");
+console.log(temps)
+message.reply("\n" + "```javascript"+ "\n" + "Nom du channel: " + data.name + "\n" + "Type de channel: " + data.type + "\n" +
+"Channel id: " + data.id + "\n" + "Topic: " + data.topic + "\n" + "Créer le: " + temps + "```" );
+console.log("\n" + "**" + "Channel id: " + data.id + "**" );
+console.log(data);
+}})
+
+app.get('/', function (req, res) {
+    var obj = new Object();
+    obj.test = "Test moi";
+    obj.rep = "test réussi !";
+    var json = JSON.stringify(obj);
+    res.send(json);
+});
+
+app.get('/playlist', function (req, res) {
+    var json = JSON.stringify(music.tab);
+    res.send(json);
+});
+
+app.listen(AuthDetails.port);
+/////////////////////////////////////////////////////////
 
 function random(min, max) {
 	min = Math.ceil(0);
