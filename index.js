@@ -783,7 +783,7 @@ var array_msg = message.content.split(' ');
 		music.next();
 		break;
 }
-if (message.content === ("y/channel")){
+if (message.content === prefix +"channel"){
 const data = client.channels.get(message.channel.id);
 moment.locale("fr");
 var temps = moment(data.createdTimestamp).format("LLLL");
