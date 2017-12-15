@@ -167,11 +167,9 @@ bot.on("message", (message) => {
 		var m = (Math.round(bot.uptime / (1000 * 60)) % 60)
 		var h = (Math.round(bot.uptime / (1000 * 60 * 60)))
 		var j = (Math.round(bot.uptime / (1000 * 60 * 60 * 24)))
-		var m = (Math.round(bot.uptime / (1000 * 60 * 60 * 24 * 30 )))
+		var M = (Math.round(bot.uptime / (1000 * 60 * 60 * 24 * 30 )))
 		m = (m < 10) ? "0" + m : m;
 		s = (s < 10) ? "0" + s : s;
-		h = (h < 10) ? "0" + h : h;
-		j = (j < 10) ? "0" + j : j;
 	message.channel.send('', { embed: {
 	corlor: 543756,
 	author: {
@@ -199,7 +197,7 @@ bot.on("message", (message) => {
 		},
 		{
 		name: 'Uptime !',
-		value: `${m} Mois ${j} Jours ${h} Heures ${m} Minutes ${s} Secondes`
+		value: `${M} Mois ${j} Jours ${h} Heures ${m} Minutes ${s} Secondes`
 		},
 	],
 	footer: {
@@ -217,11 +215,9 @@ bot.on("message", (message) => {
         var m = (Math.round(bot.uptime / (1000 * 60)) % 60)
 				var h = (Math.round(bot.uptime / (1000 * 60 * 60)))
 				var j = (Math.round(bot.uptime / (1000 * 60 * 60 * 24)))
-				var m = (Math.round(bot.uptime / (1000 * 60 * 60 * 24 *30)));
+				var M = (Math.round(bot.uptime / (1000 * 60 * 60 * 24 *30)));
         m = (m < 10) ? "0" + m : m;
 				s = (s < 10) ? "0" + s : s;
-				h = (h < 10) ? "0" + h : h;
-				j = (j < 10) ? "0" + j : j;
         message.channel.send('', { embed: {
           color: 543756,
           author: {
@@ -233,7 +229,7 @@ bot.on("message", (message) => {
           fields: [
             {
               name: 'YoyoBot UpTime',
-              value: `${m} Mois ${j} Jours ${h} Heures ${m} Minutes ${s} Secondes`,
+              value: `${M} Mois ${j} Jours ${h} Heures ${m} Minutes ${s} Secondes`,
               inline: true
             },
           ],
