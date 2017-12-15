@@ -784,7 +784,7 @@ var array_msg = message.content.split(' ');
 		break;
 }
 if (message.content === prefix +"channel"){
-const data = client.channels.get(message.channel.id);
+const data = bot.channels.get(message.channel.id);
 moment.locale("fr");
 var temps = moment(data.createdTimestamp).format("LLLL");
 console.log(temps)
