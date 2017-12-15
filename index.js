@@ -729,28 +729,24 @@ var array_msg = message.content.split(' ');
 		switch (array_msg[0]) {
 	case ("y/play") :
 		console.log("Play");
-		message.delete(message.author);
 		if (!music.getVoiceChannel()) return message.reply("Veuillez vous connectez en vocal !");
 		if (music.getTab(0) == null) return message.reply('Aucune musique, merci d\' en ajouté.');
 		else music.voice();
 		break;
 	case ("y/pause") :
 		console.log("Pause");
-		message.delete(message.author);
 		if (!music.getVoiceChannel()) return message.reply("Veuillez vous connectez en vocal !");
 		if (music.getTab(0) == null) return message.reply('Aucune musique, merci d\' en ajouté.');
 		music.pause();
 		break;
 	case ("y/resume") :
 		console.log("Resume");
-		message.delete(message.author);
 		if (!music.getVoiceChannel()) return message.reply("Veuillez vous connectez en vocal !");
 		if (music.getTab(0) == null) return message.reply('Aucune musique, merci d\' en ajouté.');
 		music.resume();
 		break;
 	case ("y/stop") :
 		console.log("Stop");
-		message.delete(message.author);
 		if (!music.getVoiceChannel()) return message.reply("Veuillez vous connectez en vocal !");
 		if (music.getTab(0) == null) return message.reply('Aucune musique, merci d\' en ajouté.');
 		else music.stop();
@@ -758,7 +754,6 @@ var array_msg = message.content.split(' ');
 		break;
 	case ("y/add") :
 		console.log("Add");
-		message.delete(message.author);
 		var link = message.content.split(' ');
 		link.shift();
 		link = link.join(' ');
@@ -771,7 +766,6 @@ var array_msg = message.content.split(' ');
 		break;
 	case ("y/link") :
 		console.log("Link");
-		message.delete(message.author);
 		var link = message.content.split(' ');
 		link.shift();
 		link = link.join(' ');
@@ -780,7 +774,6 @@ var array_msg = message.content.split(' ');
 		break;
 	case ("y/volume") :
 		console.log("Volume");
-		message.delete(message.author);
 		var link = message.content.split(' ');
 		link.shift();
 		link = link.join(' ');
@@ -789,18 +782,10 @@ var array_msg = message.content.split(' ');
 		break;
 	case ("y/next") :
 		console.log("Next");
-		message.delete(message.author);
 		if (music.getI() < music.getLengthTab()) music.setI(this.i + 1);
 		if (music.getI() >= music.getLengthTab()) music.setI(0);
 		music.next();
 		break;
-}	if (message.content === ("test")){
-message.reply('test !');
-}else if (message.content.startsWith("!say")){
-message.delete(message.author);
-var say = message.content.substr(5);
-message.reply(say);
-}
 
 if (message.content === ("y/channel")){
 const data = client.channels.get(message.channel.id);
