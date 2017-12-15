@@ -32,7 +32,7 @@ bot.on("ready", () => {
   console.log("Je suis pres a l'utilisation!");
 })
 
-bot.login("Mzg3NjY5MTMzMzA0NTI4ODk3.DRWQ4A.5JxSGOOmfLXGqyFa3F6qEQnbmsE");
+bot.login(bot.login(process.env.TOKEN));
 
 bot.on("message", (message) => {
 
@@ -66,39 +66,29 @@ bot.on("message", (message) => {
 
 	if(message.content === prefix+ "help"){
 		message.delete()
-		message.channel.send('', { embed: {
-			corlor: 543756,
-			author: {
-			  name: message.author.tag,
-			  icon_url: message.author.avatarURL,
-		   },
-		   title: 'Tout ce que le bot rajoute !',
-		   url: '',
-		   fields: [
-			  {
-				name: 'Les commandes', 
-				value: `-help : Affiche les commandes du bot \n -up : Voir depuis combien de temps le bot est démarer ! \n -info : Voir les info du bot ! \n -newblague (text) : Ajoute une blague a la base de donné ! \n -raconteuneblague : Le bot raconte une blagues aléatoire (en dévellopement) !\n-niveau : Affiche votre xp !\n-kick : Pour kick une personne !\n-ban : Pour ban une personne !\n-shop : Pour voir les objetc que vous pouvez acheté avec votre XP !\n-buyitem (ID): Pour acheté un objet disponible dans le shop !\n-nouveauté : Pour voir les nouveauté du bot !\n-invitation : Pour voir l'invitation du bot !\n-stats : Pour voir vos stats !\n-créateur : Pour voir le créateur du bot !\n-flip : Permet de lancé une pièce !\n-8ball : Pense a une question et la ball te réponderas !\n-fetenoel (speudo) : Fete noel a quelqu'un !\n-Say (text): Permet de faire dire quelque chose au bot !\n-purge : Permet de supprimé 50 messages !\n-mute (@exemple#0000) (raison) : Permet de mute une personne !\n-unmute (@exemple#0000) : Permet d'unmute une personne !`,
-			  },
-			  {
-				name: 'Les intéractions',
-				value: `ping : Le bot répond pong et dit les ms du bot\nComment vas-tu bot ? : Le bot choisit entre deux réponse aux hasard (en dévellopement) !`,
-				 },
-				 {
-					 name: 'Les ajouts',
-					 value: `Message de bienvenue et d'en revoir`,
-				 }
-			],
-			footer: {
-			  icon_url: bot.user.avatarURL,
-			  text: bot.user.username		
-		  },
-	  }})
-		console.log("Commande help demandée !");
+		message.channel.send(" ", { embed: { 
+			title: 'Tout ce que le bot rajoute !',
+			url: '',
+			fields: [
+			   {
+				 name: 'Les commandes', 
+				 value: `-help : Affiche les commandes du bot \n -up : Voir depuis combien de temps le bot est démarer ! \n -info : Voir les info du bot ! \n -newblague (text) : Ajoute une blague a la base de donné ! \n -raconteuneblague : Le bot raconte une blagues aléatoire (en dévellopement) !\n-niveau : Affiche votre xp !\n-kick : Pour kick une personne !\n-ban : Pour ban une personne !\n-shop : Pour voir les objetc que vous pouvez acheté avec votre XP !\n-buyitem (ID): Pour acheté un objet disponible dans le shop !\n-nouveauté : Pour voir les nouveauté du bot !\n-invitation : Pour voir l'invitation du bot !\n-stats : Pour voir vos stats !\n-créateur : Pour voir le créateur du bot !\n-flip : Permet de lancé une pièce !\n-8ball : Pense a une question et la ball te réponderas !\n-fetenoel (speudo) : Fete noel a quelqu'un !\n-Say (text): Permet de faire dire quelque chose au bot !\n-purge : Permet de supprimé 50 messages !\n-mute (@exemple#0000) (raison) : Permet de mute une personne !\n-unmute (@exemple#0000) : Permet d'unmute une personne !`,
+			   },
+			   {
+				 name: 'Les intéractions',
+				 value: `ping : Le bot répond pong et dit les ms du bot\nComment vas-tu bot ? : Le bot choisit entre deux réponse aux hasard (en dévellopement) !`,
+				  },
+				  {
+					  name: 'Les ajouts',
+					  value: `Message de bienvenue et d'en revoir`,
+				  }
+			 ],
+			 footer: {
+			   icon_url: bot.user.avatarURL,
+			   text: bot.user.username	
+		}}})
 	}
 
-	if(message.content.startsWith(prefix + 'botname')){
-		bot.user.setUsername(message.content.substr(9));
-	}
 
 	if (message.content.startsWith(prefix + "wiki")){
 		if(!message.content.substr(5)) {
@@ -876,15 +866,6 @@ if (message.content.startsWith("!clear")) {
 		con(`Parameters not provided for y/google command`);
 		message.channel.sendMessage(` ❓❓❓`);
 	  }
-
-		  } else {
-			con(`No IMDB entries found for ` + msgc.substr(6));
-			message.channel.sendMessage("Rien trouvé dans IMDB 😶🚫");
-		  }
-		});
-	  } else {
-		message.channel.sendMessage(`Fait y/imdb et le nom du film`);
-	  }
 	}
 	if (message.content === prefix +'dog'){
 		const randomPuppy = require("random-puppy");
@@ -905,9 +886,9 @@ if (message.content.startsWith("!clear")) {
 				});
 			});
 		}
-	})
-/////////////////////////////////////////////////////////////////////////////////////////
+})
 
+/////////////////////////////////////////////////////////////////////////////////////////
 
 function random(min, max) {
 	min = Math.ceil(0);
