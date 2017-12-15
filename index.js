@@ -782,7 +782,7 @@ var array_msg = message.content.split(' ');
 		if (music.getI() >= music.getLengthTab()) music.setI(0);
 		music.next();
 		break;
-
+}
 if (message.content === ("y/channel")){
 const data = client.channels.get(message.channel.id);
 moment.locale("fr");
