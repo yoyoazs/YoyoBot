@@ -3,18 +3,10 @@ const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
 const weather = require("weather-js");
 const Wiki = require("wikijs");
-const express = require("express");
-var app = express();
-var yt = require("./youtubeplugin");
-var youtube_plugin = new yt();
 var AuthDetails = require("./auth.json");
 var RedisSessions = require("redis-sessions");
 var rs = new RedisSessions();
-var Music = require("./Music.js");
 var functionHelper = require('./functionHelpers.js');
-var ffmpeg = require("ffmpeg");
-var search = require('youtube-search'),
-music = new Music();
 
 const adapter = new FileSync('database.json');
 const shopadapter = new FileSync('shop.json')
@@ -33,13 +25,15 @@ var prefix = ("y/");
 var randnum = 0;
 
 var blaguenumber = db.get('blagues').map('blague_value').value();
+con = console.log;
 
 bot.on("ready", () => {
 	bot.user.setPresence({ game: { name: '[y/help] Bot en développement', type: 0}})
   console.log("Je suis pres a l'utilisation!");
 })
 
-bot.login(bot.login(process.env.TOKEN));
+bot.login("Mzg3NjY5MTMzMzA0NTI4ODk3.DRWQ4A.5JxSGOOmfLXGqyFa3F6qEQnbmsE");
+
 bot.on("message", (message) => {
 
 	const arg = message.content.slice(prefix.length).trim().split(/ +/g);
@@ -161,7 +155,7 @@ bot.on("message", (message) => {
 	 		}
 		}
 	
-	if(message.content === prefix + "info") {
+	if(message.content === prefix + "infobot") {
 		message.delete()
 		var s = (Math.round(bot.uptime / 1000) % 60)
 		var m = (Math.round(bot.uptime / (1000 * 60)) % 60)
@@ -213,11 +207,11 @@ bot.on("message", (message) => {
         var icon = message.author.avatarURL;
         var s = (Math.round(bot.uptime / 1000) % 60)
         var m = (Math.round(bot.uptime / (1000 * 60)) % 60)
-				var h = (Math.round(bot.uptime / (1000 * 60 * 60)))
-				var j = (Math.round(bot.uptime / (1000 * 60 * 60 * 24)))
-				var M = (Math.round(bot.uptime / (1000 * 60 * 60 * 24 *30)));
-        m = (m < 10) ? "0" + m : m;
-				s = (s < 10) ? "0" + s : s;
+		var h = (Math.round(bot.uptime / (1000 * 60 * 60)))
+		var j = (Math.round(bot.uptime / (1000 * 60 * 60 * 24)))
+		var M = (Math.round(bot.uptime / (1000 * 60 * 60 * 24 *30)));
+    	m = (m < 10) ? "0" + m : m;
+		s = (s < 10) ? "0" + s : s;
         message.channel.send('', { embed: {
           color: 543756,
           author: {
@@ -399,13 +393,7 @@ if(msg.content.startsWith(prefix + 'mute')){
 		const sayMessage = arg.join(" ");
 		message.delete().catch(O_o=>{});
 		message.channel.send(sayMessage);
-	}
-
-	if (message.content.startsWith('!youtube')){
-		youtube_plugin.respond(message.content, message.channel , client);
-		}
-	
-		
+	}	
 	
   if (message.content.startsWith("ping")) {
 		message.channel.send(`:ping_pong: pong! Mon ping est de : ${Date.now() - message.createdTimestamp} ms`);
@@ -620,47 +608,6 @@ message.channel.send(sayings[result]);
 
 				break;
 
-		case "stats":
-
-			var userXpDB = db.get("xp").filter({user: msgauthor}).find("xp").value();
-			var userxp = Object.values(userXpDB);
-			var inventoryDb = db.get("inventory").filter({user: msgauthor}).find("items").value();
-			var inventory = Object.values(inventoryDb);
-			var userCreateDate = message.author.createdAt.toString().split(' ');
-				message.channel.send('', { embed: {
-					corlor: 543756,
-					author: {
-						name: message.author.tag,
-						icon_url: message.author.avatarURL,
-					 },
-					 title: `Vos stats :`,
-					 url: '',
-					 fields: [
-						{
-						name: `Votre XP :`, 
-						value: `${userxp[1]} XP`,
-						},
-						{
-						name: 'Votre ID :',
-						value: message.author.id,
-						},
-						{
-							name: 'Inventaire :',
-							value: inventory[1],
-						},
-						{
-							name: `Date de création de l'utilisateur :`,
-							value: userCreateDate[1] + ', ' + userCreateDate[2] + ', ' + userCreateDate[3] ,
-						}
-					],
-					footer: {
-						icon_url: bot.user.avatarURL,
-						text: bot.user.username,		
-					},
-				}})
-			
-			break;
-
 			case "fetenoel":
 			message.delete()
 				var speudo = message.content.substr(11);
@@ -716,99 +663,328 @@ message.channel.send(sayings[result]);
 
 	})
 
-////////////////////////////////////////////////////////////////////////
-var messages = [];
+
 bot.on("message", (message) => {
-music.setVoiceChannel(message.member.voiceChannel);
-var array_msg = message.content.split(' ');
-		messages.push(message);
-		switch (array_msg[0]) {
-	case ("y/play") :
-		console.log("Play");
-		if (!music.getVoiceChannel()) return message.reply("Veuillez vous connectez en vocal !");
-		if (music.getTab(0) == null) return message.reply('Aucune musique, merci d\' en ajouté.');
-		else music.voice();
-		break;
-	case ("y/pause") :
-		console.log("Pause");
-		if (!music.getVoiceChannel()) return message.reply("Veuillez vous connectez en vocal !");
-		if (music.getTab(0) == null) return message.reply('Aucune musique, merci d\' en ajouté.');
-		music.pause();
-		break;
-	case ("y/resume") :
-		console.log("Resume");
-		if (!music.getVoiceChannel()) return message.reply("Veuillez vous connectez en vocal !");
-		if (music.getTab(0) == null) return message.reply('Aucune musique, merci d\' en ajouté.');
-		music.resume();
-		break;
-	case ("y/stop") :
-		console.log("Stop");
-		if (!music.getVoiceChannel()) return message.reply("Veuillez vous connectez en vocal !");
-		if (music.getTab(0) == null) return message.reply('Aucune musique, merci d\' en ajouté.');
-		else music.stop();
-		message.reply("La queue à était vidé !");
-		break;
-	case ("y/add") :
-		console.log("Add");
-		var link = message.content.split(' ');
-		link.shift();
-		link = link.join(' ');
-		search(link, opts, function(err, results) {
-			if(err) return console.log(err);
-			for (var y = 0; results[y].kind == 'youtube#channel'; y++);
-			message.channel.sendMessage(results[y].link);
-			music.setTabEnd(results[y].link);
+	var msgauthor = message.author.tag;
+	const msgc = message.content;
+
+if(message.content === prefix +"info") {
+	var userXpDB = db.get("xp").filter({user: msgauthor}).find("xp").value();
+	var userxp = Object.values(userXpDB);
+	var inventoryDb = db.get("inventory").filter({user: msgauthor}).find("items").value();
+	var inventory = Object.values(inventoryDb);
+	var userCreateDate = message.author.createdAt.toString().split(' ');
+    var memberavatar = message.author.avatarURL
+    var membername = message.author.username
+       var mentionned = message.mentions.users.first();
+      var getvalueof;
+      if(mentionned){
+          var getvalueof = mentionned;
+      } else {
+          var getvalueof = message.author;
+      }
+
+      if(getvalueof.bot == true){
+          var checkbot = "L'utilisateur est un bot";
+      } else {
+          var checkbot = "N'est pas un bot";
+      }
+      if(getvalueof.presence.status == 'online'){
+        var status = "En ligne"; 
+      }else {
+        var status = "Hors ligne";
+      }
+
+    message.channel.sendMessage({
+        embed: {
+          type: 'rich',
+          description: '',
+          fields: [{
+            name: 'Pseudo',
+            value: getvalueof.username,
+            inline: true
+          }, {
+            name: 'User id',
+            value: getvalueof.id,
+            inline: true
+          },{
+            name: 'Discriminateur',
+            value: getvalueof.discriminator,
+            inline: true
+},{
+            name: 'Status',
+            value: status,
+            inline: true
+},{
+            name: 'Bot',
+            value: checkbot,
+			inline: true
+},{
+	name: 'Inventaire :',
+	value: inventory[1],
+	inline: true
+},{
+	name: `Date de création de l'utilisateur :`,
+	value: userCreateDate[1] + ', ' + userCreateDate[2] + ', ' + userCreateDate[3] ,
+	inline: true
+},{
+	name: `Votre XP :`, 
+	value: `${userxp[1]} XP`,
+	inline: true
+}],
+        image: {
+      url: getvalueof.avatarURL
+        },
+          color: 0xE46525,
+          footer: {
+            text: bot.user.username,
+            proxy_icon_url: ' '
+          },
+
+          author: {
+            name: membername,
+            icon_url: memberavatar,
+            proxy_icon_url: ' '
+          }
+		}
+	})}
+
+if (message.content.startsWith("!clear")) {
+	let modRole = message.guild.roles.find("name", "Mod");
+		  if(!message.guild.roles.exists("name", "Mod")) {
+	  return  message.channel.sendMessage("", {embed: {
+		title: "Erreur:",
+		color: 0xff0000,
+		description: " :no_entry_sign: Le rôle **Mod** n'existe pas dans ce serveur veuillez le créer pour Clear! :no_entry_sign: ",
+		footer: {
+		  text: "Message par "+ bot.user.username
+		}
+	  }}).catch(console.error);
+	} 
+	if(!message.member.roles.has(modRole.id)) {
+	  return   message.channel.sendMessage("", {embed: {
+		title: "Erreur:",
+		color: 0xff0000,
+		description: " :no_entry_sign: Vous n'avez pas la permissions d'utiliser cette commande ! :no_entry_sign: ",
+		footer: {
+		  text: "Message par "+ bot.user.username
+		}
+	  }}).catch(console.error);
+	}
+  var args = message.content.substr(7);
+	if(args.length === 0){
+	  message.channel.sendMessage("", {embed: {
+		title: "Erreur:",
+		color: 0xff0000,
+		description: " :x: Vous n'avez pas précisser le nombre :x: ",
+		footer: {
+		  text: "Message par "+bot.user.username
+		}
+	  }});
+	}
+	else {
+	  var msg;
+	  if(args.length === 1){
+	  msg = 2;
+	} else {
+	  msg = parseInt(args[1]);
+	}
+	message.channel.fetchMessages({limit: msg}).then(messages => message.channel.bulkDelete(messages)).catch(console.error);
+	message.channel.sendMessage("", {embed: {
+	  title: "Success!",
+	  color: 0x06DF00,
+	  description: "Messages Suprimé!",
+	  footer: {
+		text: "Message par "+bot.user.username
+	  }
+	}});
+	}
+
+	}else if (msgc.startsWith(prefix +'google')){
+	const google = require("google");
+	const unirest = require("unirest");
+	
+	  if(msgc.substr(9)) {
+		let query = msgc.substr(9);
+		  con(query);
+		let num = (msgc.substr(9).lastIndexOf(" ") + 1);
+		if(!query || isNaN(num)) {
+		  query = msgc.substr(9);
+		  num = 0;
+		}
+		if(num < 0 || num > 2) {
+		  num = 0;
+		} else {
+		  num = parseInt(num);
+		}
+		unirest.get(`https://kgsearch.googleapis.com/v1/entities:search?query=${encodeURIComponent(query)}&key=${AuthDetails.youtube_api_key}&limit=1&indent=True`).header("Accept", "application/json").end(res => {
+		  const doSearch = () => {
+			google(query, (err, res) => {
+			  if(err || res.links.length == 0) {
+				message.channel.sendMessage("🙅 Pas de resultas!");
+			  } else {
+				const results = [];
+				if(num == 0) {
+				  num = 1;
+				}
+				for(let i=0; i < Math.min(res.links.length, num); i++) {
+				  if([`News for ${query}`, `Image pour ${query}`].indexOf(res.links[i].title)>-1) {
+					res.links.splice(i, 1);
+					i--;
+					continue;
+				  }
+			  message.channel.sendMessage({
+			embed: {
+			  type: 'rich',
+			  description: '',
+			  fields: [{
+				name: 'Resulta Google',
+				value: `[${res.links[i].title}](`+`${res.links[i].href})`,
+				inline: true
+			  },{
+				name: '** **',
+				value: `${res.links[i].description}`,
+				inline: true
+			  }],
+			   thumbnail: {
+				 url: "http://diylogodesigns.com/blog/wp-content/uploads/2016/04/google-logo-icon-PNG-Transparent-Background.png"
+					},
+			  color: 3447003,
+			  footer: {
+				text: bot.user.username,
+				proxy_icon_url: ' '
+			  }
+			}
+	});
+				}
+	
+			  }
+			});
+		  };
+		  
+		  if(res.status == 200 && res.body.itemListElement[0] && res.body.itemListElement[0].result && res.body.itemListElement[0].result.detailedDescription) {
+			message.channel.sendMessage(`\`\`\`${res.body.itemListElement[0].result.detailedDescription.articleBody}\`\`\`<${res.body.itemListElement[0].result.detailedDescription.url}>`).then(() => {
+			  if(num > 0) {
+				doSearch();
+			  }
+			});
+		  } else {
+			doSearch();
+		  }
 		});
-		break;
-	case ("y/link") :
-		console.log("Link");
-		var link = message.content.split(' ');
-		link.shift();
-		link = link.join(' ');
-		console.log(link);
-		music.setTabEnd(link);
-		break;
-	case ("y/volume") :
-		console.log("Volume");
-		var link = message.content.split(' ');
-		link.shift();
-		link = link.join(' ');
-		music.volume(link/100);
-		message.reply("le volume et maintenant à :" + link);
-		break;
-	case ("y/next") :
-		console.log("Next");
-		if (music.getI() < music.getLengthTab()) music.setI(this.i + 1);
-		if (music.getI() >= music.getLengthTab()) music.setI(0);
-		music.next();
-		break;
-}
-if (message.content === prefix +"channel"){
-const data = bot.channels.get(message.channel.id);
-moment.locale("fr");
-var temps = moment(data.createdTimestamp).format("LLLL");
-console.log(temps)
-message.reply("\n" + "```javascript"+ "\n" + "Nom du channel: " + data.name + "\n" + "Type de channel: " + data.type + "\n" +
-"Channel id: " + data.id + "\n" + "Topic: " + data.topic + "\n" + "Créer le: " + temps + "```" );
-console.log("\n" + "**" + "Channel id: " + data.id + "**" );
-console.log(data);
-}})
+	  } else {
+		con(`Parameters not provided for y/google command`);
+		message.channel.sendMessage(` ❓❓❓`);
+	  }
 
-app.get('/', function (req, res) {
-    var obj = new Object();
-    obj.test = "Test moi";
-    obj.rep = "test réussi !";
-    var json = JSON.stringify(obj);
-    res.send(json);
-});
+}else if (msgc.startsWith(prefix +'imdb')){
+	const unirest = require("unirest");
+	
+	let  query = msgc.substr(6);
+	  let type = "";
+	  if(query.toLowerCase().indexOf("series ")==0 || query.toLowerCase().indexOf("episode ")==0 || query.toLowerCase().indexOf("movie ")==0) {
+		type = `&type=${query.substring(0, query.indexOf(" ")).toLowerCase()}`;
+		query = query.substring(query.indexOf(" ")+1);
+	  }
+	  if(query) {
+		unirest.get(`http://www.omdbapi.com/?t=${encodeURIComponent(query)}&r=json${type}`).header("Accept", "application/json").end(res => {
+		  if(res.status==200 && res.body.Response=="True") {
+			message.channel.sendMessage({
+					  embed: {
+			  type: 'rich',
+			  description: '',
+			  fields: [{
+				name: 'Results Imdb :film_frames:',
+				value:  `[${res.body.Title}${type ? "" : (` (${res.body.Type.charAt(0).toUpperCase()}${res.body.Type.slice(1)})`)}](http://www.imdb.com/title/${res.body.imdbID}/)`,
+				inline: false
+			  },{
+				name: '** **',
+				value:  `\`\`\`${res.body.Plot}\`\`\``,
+				inline: false
+			  },{
+				name: 'Année',
+				value:  `${res.body.Year}`,
+				inline: true
+			  },{
+				name: 'Rated',
+				value:  `${res.body.Rated}`,
+				inline: true
+			  },{
+				name: 'Runtime',
+				value:  `${res.body.Runtime}`,
+				inline: true
+			  },{
+				name: 'Réalisateur',
+				value:  `${res.body.Director}`,
+				inline: true
+			  },{
+				name: 'Writer',
+				value:  `${res.body.Writer}`,
+				inline: true
+			  },{
+				name: 'Acteurs',
+				value:  `${res.body.Actors}`,
+				inline: true
+			  },{
+				name: 'Genre(s)',
+				value:  `${res.body.Genre}`,
+				inline: false
+			  },{
+				name: 'Note',
+				value:  `${res.body.imdbRating} out of ${res.body.imdbVotes} votes`,
+				inline: true
+			  },{
+				name: 'Récompense',
+				value:  `${res.body.Awards}`,
+				inline: true
+			  },{
+				name: 'Pays',
+				value:  `${res.body.Country}`,
+				inline: true
+			  }],
+			  color: 3447003,
+			  footer: {
+				text: bot.user.username,
+				proxy_icon_url: ' '
+			  },
+			   author: {
+				name: message.author.username,
+				icon_url: message.author.avatarURL,
+				proxy_icon_url: ' '
+			  }
+			}
+			})
+		  } else {
+			con(`No IMDB entries found for ` + msgc.substr(6));
+			message.channel.sendMessage("Rien trouvé dans IMDB 😶🚫");
+		  }
+		});
+	  } else {
+		message.channel.sendMessage(`Fait y/imdb et le nom du film`);
+	  }
+	}
+	if (message.content === prefix +'dog'){
+		const randomPuppy = require("random-puppy");
+		
+			  randomPuppy().then(url => {
+				message.channel.sendMessage({
+					embed: {
+						author: {
+							name: bot.user.username,
+							icon_url: bot.user.avatarURL,
+							url: "http://takohell.com:3000"
+						},
+						color: 0x00FF00,
+						image: {
+							url: url
+						}
+					}
+				});
+			});
+		}
+	})
+/////////////////////////////////////////////////////////////////////////////////////////
 
-app.get('/playlist', function (req, res) {
-    var json = JSON.stringify(music.tab);
-    res.send(json);
-});
-
-app.listen(AuthDetails.port);
-/////////////////////////////////////////////////////////
 
 function random(min, max) {
 	min = Math.ceil(0);
