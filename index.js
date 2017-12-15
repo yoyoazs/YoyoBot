@@ -32,7 +32,7 @@ bot.on("ready", () => {
   console.log("Je suis pres a l'utilisation!");
 })
 
-bot.login("Mzg3NjY5MTMzMzA0NTI4ODk3.DRWQ4A.5JxSGOOmfLXGqyFa3F6qEQnbmsE");
+bot.login(bot.login(process.env.TOKEN));
 
 bot.on("message", (message) => {
 
