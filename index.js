@@ -4,19 +4,13 @@ const FileSync = require('lowdb/adapters/FileSync')
 const weather = require("weather-js");
 const Wiki = require("wikijs");
 var AuthDetails = require("./auth.json");
-var RedisSessions = require("redis-sessions");
-var rs = new RedisSessions();
-var functionHelper = require('./functionHelpers.js');
 
 const adapter = new FileSync('database.json');
 const shopadapter = new FileSync('shop.json')
 const config = new FileSync('config.json')
 const db = low(adapter);
 const shopdb = low(shopadapter)
-const opts = {
-	maxResults: 3,
-	key: AuthDetails.youtube_api_key
-  };
+
 
 db.defaults({ blagues: [], xp: [], inventory: []}).write()
 
@@ -32,7 +26,7 @@ bot.on("ready", () => {
   console.log("Je suis pres a l'utilisation!");
 })
 
-bot.login(bot.login(process.env.TOKEN));
+bot.login("Mzg3NjY5MTMzMzA0NTI4ODk3.DRWQ4A.5JxSGOOmfLXGqyFa3F6qEQnbmsE");
 
 bot.on("message", (message) => {
 
@@ -65,23 +59,38 @@ bot.on("message", (message) => {
 	}
 
 	if(message.content === prefix+ "help"){
-		message.delete()
 		message.channel.send(" ", { embed: { 
-			title: 'Tout ce que le bot rajoute !',
+			title: 'Les commandes du bot :',
 			url: '',
 			fields: [
 			   {
-				 name: 'Les commandes', 
-				 value: `-help : Affiche les commandes du bot \n -up : Voir depuis combien de temps le bot est démarer ! \n -info : Voir les info du bot ! \n -newblague (text) : Ajoute une blague a la base de donné ! \n -raconteuneblague : Le bot raconte une blagues aléatoire (en dévellopement) !\n-niveau : Affiche votre xp !\n-kick : Pour kick une personne !\n-ban : Pour ban une personne !\n-shop : Pour voir les objetc que vous pouvez acheté avec votre XP !\n-buyitem (ID): Pour acheté un objet disponible dans le shop !\n-nouveauté : Pour voir les nouveauté du bot !\n-invitation : Pour voir l'invitation du bot !\n-stats : Pour voir vos stats !\n-créateur : Pour voir le créateur du bot !\n-flip : Permet de lancé une pièce !\n-8ball : Pense a une question et la ball te réponderas !\n-fetenoel (speudo) : Fete noel a quelqu'un !\n-Say (text): Permet de faire dire quelque chose au bot !\n-purge : Permet de supprimé 50 messages !\n-mute (@exemple#0000) (raison) : Permet de mute une personne !\n-unmute (@exemple#0000) : Permet d'unmute une personne !`,
+				 name: `${prefix}help mod`, 
+				 value: `Pour voir les commandes pour les modérateur !`,
 			   },
 			   {
-				 name: 'Les intéractions',
-				 value: `ping : Le bot répond pong et dit les ms du bot\nComment vas-tu bot ? : Le bot choisit entre deux réponse aux hasard (en dévellopement) !`,
-				  },
-				  {
-					  name: 'Les ajouts',
-					  value: `Message de bienvenue et d'en revoir`,
-				  }
+				 name: `${prefix}help interaction`,
+				 value: `Pour voir les intéraction du bot !`,
+				},
+				{
+				 name: `${prefix}help recherche`,
+				 value: `Pour voir les commandes qui vous permet de faire des recherche !`,
+				},
+				{
+				 name: `${prefix}help casino`,
+				 value: `Pour voir les commandes qui vous permet de joué a un semblant de casino !`,	
+				},
+				{
+					name: `${prefix}help data`,
+					value: "Pour voir les commandes qui ont besoin de la base de donné !",
+				},
+				{
+					name: `${prefix}help information`,
+					value: "Pour voir les commandes qui vous donnes des informations !",
+				},
+				{
+					name: `${prefix}help autres`,
+					value: "Pour voir les autres commandes !",
+				},
 			 ],
 			 footer: {
 			   icon_url: bot.user.avatarURL,
@@ -252,7 +261,6 @@ bot.on("message", (message) => {
 	}
 
 	if (message.content === prefix + "nouveauté"){
-		message.delete()
 		message.channel.send('', { embed: {
 			corlor: 543756,
 			author: {
@@ -263,12 +271,12 @@ bot.on("message", (message) => {
 		   url: '',
 		   fields: [
 			  {
-				name: 'Version du bot: Alpha.', 
-				value: `Auqu'une amélioration de commande !`
+				name: 'Version du bot: Beta.', 
+				value: `La commande 'help' a étais amélioré!\nLa commande 'info' a étais amélioré !\nLa commande 'infobot' a étais amélioré !\nLa commande 'clear' a étais amélioré !\nMais mon francais ne c'est pas amélioré. :(`
 				},
 				{
 					name: 'Ajout :',
-					value: `Ajout de la commande 'flip' !\nAjout de la commande '8rall' !\nAjout de la commande 'fetenoel' !\nAjout de la commande 'say' !\nAjout de la commande 'purge' !\nAjout de la commande 'mute' !\nAjout de la commande 'unmute' !`
+					value: `Ajout de la commande 'ban' !\nAjout de la commande 'kick' !\nAjout de la commande 'google' !\nAjout de la commande 'wiki' !\nAjout de la commande 'méteo' !`
 				}
 			],
 			footer: {
@@ -651,10 +659,7 @@ message.channel.send(sayings[result]);
 					}
 				}
 
-	})
 
-
-bot.on("message", (message) => {
 	var msgauthor = message.author.tag;
 	const msgc = message.content;
 
@@ -739,7 +744,7 @@ if(message.content === prefix +"info") {
 		}
 	})}
 
-if (message.content.startsWith("!clear")) {
+if (message.content.startsWith(prefix +"clear")) {
 	let modRole = message.guild.roles.find("name", "Mod");
 		  if(!message.guild.roles.exists("name", "Mod")) {
 	  return  message.channel.sendMessage("", {embed: {
@@ -886,10 +891,257 @@ if (message.content.startsWith("!clear")) {
 				});
 			});
 		}
-})
 
-/////////////////////////////////////////////////////////////////////////////////////////
+	if (message.content === prefix +"help mod"){
+		message.channel.send({ embed: {
+			author:{
+				name: message.author.username,
+				icon: message.author.avatarURL,
+				url: "",
+			},
+			title: "Commande pour les modérateurs:",
+			url: "",
+			fields:[
+				{
+					name: `${prefix}mute`,
+					value: "Permet de mute une personne spécifié !"
+				},
+				{
+					name: `${prefix}unmute`,
+					value: "Permet de unmute une personne spécifié !"
+				},
+				{
+					name: `${prefix}ban`,
+					value: "Permet de ban une personne spécifié !"
+				},
+				{
+					name: `${prefix}kick`,
+					value: "Permet de kick une personne spécifié !"
+				},
+				{
+					name: `${prefix}clear`,
+					value: "Permet de supprimé un nombre de méssages spécifié !"
+				},
+			],
+			footer: {
+				icon_url: bot.user.username,
+				text: bot.user.avatarURL
+			}
 
+		}})
+	}
+
+	if (message.content === prefix +"help recherche"){
+		message.channel.send({ embed: {
+			author:{
+				name: message.author.username,
+				icon: message.author.avatarURL,
+				url: "",
+			},
+			title: "Commande qui permette de faire des recherche:",
+			url: "",
+			fields:[
+				{
+					name: `${prefix}wiki <recherche>`,
+					value: "Permet de faire une recherche sur wikipédia !"
+				},
+				{
+					name: `${prefix}google <recherche>`,
+					value: "Permet de faire une recherche sur google !"
+				},
+				{
+					name: `${prefix}méteo <ville> <pays>`,
+					value: "Permet de recherché la méteo qui fait dans une ville spécifié !"
+				},
+			],
+			footer: {
+				icon_url: bot.user.username,
+				text: bot.user.avatarURL
+			}
+
+		}})
+	}
+
+	if (message.content === prefix +"help interactoion"){
+		message.channel.send({ embed: {
+			author:{
+				name: message.author.username,
+				icon: message.author.avatarURL,
+				url: "",
+			},
+			title: "",
+			url: "",
+			fields:[
+				{
+					name: `Comment vas-tu bot ?`,
+					value: "Le bot choisit aléatoirement entre deux réponse et vous répond s'il il vas bien ou pas !"
+				},
+				{
+					name: `ping`,
+					value: "Le bot vous répond pong plus son nombre de ms !"
+				},
+			],
+			footer: {
+				icon_url: bot.user.username,
+				text: bot.user.avatarURL
+			}
+
+		}})
+	}
+
+	if (message.content === prefix +"help casino"){
+		message.channel.send({ embed: {
+			author:{
+				name: message.author.username,
+				icon: message.author.avatarURL,
+				url: "",
+			},
+			title: "",
+			url: "",
+			fields:[
+				{
+					name: `${prefix}roll`,
+					value: "Le bot répond un nombre aléatoire entre 1 et 100 !"
+				},
+				{
+					name: `${prefix}flip`,
+					value: "Le bot lance une piéce et dit si elle est tombé sur pile ou sur face !"
+				},
+				{
+					name: `${prefix}roulette`,
+					value: "Le bot lance la roulette et dit si la boulle est tombé sur le rouge, le noir ou le vert !"
+				},
+			],
+			footer: {
+				icon_url: bot.user.username,
+				text: bot.user.avatarURL
+			}
+
+		}})
+	}
+
+	if (message.content === prefix +"help data"){
+		message.channel.send({ embed: {
+			author:{
+				name: message.author.username,
+				icon: message.author.avatarURL,
+				url: "",
+			},
+			title: "",
+			url: "",
+			fields:[
+				{
+					name: `${prefix}newblague <blague>`,
+					value: "Permet rajouté une blague a la base de donné !"
+				},
+				{
+					name: `${prefix}raconteuneblague`,
+					value: "Le bot raconte une blague !"
+				},
+				{
+					name: `${prefix}shop`,
+					value: "Permet de voir les items disponible dans le shop !"
+				},
+				{
+					name: `${prefix}buyitem <id>`,
+					value: "Permet d'acheté un items disponible dans le shop !"
+				},
+			],
+			footer: {
+				icon_url: bot.user.username,
+				text: bot.user.avatarURL
+			}
+
+		}})
+	}
+
+	if (message.content === prefix +"help information"){
+		message.channel.send({ embed: {
+			author:{
+				name: message.author.username,
+				icon: message.author.avatarURL,
+				url: "",
+			},
+			title: "",
+			url: "",
+			fields:[
+				{
+					name: `${prefix}info`,
+					value: "Permet de voir vos informations !"
+				},
+				{
+					name: `${prefix}infobot`,
+					value: "Permet de voir les informations du bot !"
+				},
+				{
+					name: `${prefix}niveau`,
+					value: "Permet de voir votre niveau !"
+				},
+				{
+					name: `${prefix}up`,
+					value: "Permet de voir depuis quand le bot est démaré !"
+				},
+			],
+			footer: {
+				icon_url: bot.user.username,
+				text: bot.user.avatarURL
+			}
+
+		}})
+	}
+
+	if (message.content === prefix +"help autres"){
+		message.channel.send({ embed: {
+			author:{
+				name: message.author.username,
+				icon: message.author.avatarURL,
+				url: "",
+			},
+			title: "",
+			url: "",
+			fields:[
+				{
+					name: `${prefix}say <text>`,
+					value: "Permet de faire parlé le bot !"
+				},
+				{
+					name: `${prefix}nouveauté`,
+					value: "Permet de voir les nouveautés du bot !"
+				},
+				{
+					name: `${prefix}help`,
+					value: "Permet de voir les commandes du bot !"
+				},
+				{
+					name: `${prefix}invitation`,
+					value: "Permet de voir l'invitation du bot !"
+				},
+				{
+					name: `${prefix}créateur`,
+					value: "Permet de voir qui est le créateur du bot !"
+				},
+				{
+					name: `${prefix}8ball <question>`,
+					value: "Le bot répondera a votre question !"
+				},
+				{
+					name: `${prefix}fetenoel <speudo>`,
+					value: "Permet de fêté noel a une personne !"
+				},
+				{
+					name: `${prefix}dog`,
+					value: "Permet d'envoyé une photo d'une chien"
+				},
+			],
+			footer: {
+				icon_url: bot.user.username,
+				text: bot.user.avatarURL
+			}
+
+		}})
+	}
+
+	});
 function random(min, max) {
 	min = Math.ceil(0);
 	max = Math.floor(blaguenumber);
