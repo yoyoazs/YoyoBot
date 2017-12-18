@@ -336,11 +336,13 @@
 			}
 
 			if(msg.content.startsWith(prefix + 'say')){
+			if(message.author.id == "285345858348646400"){
 			const sayMessage = arg.join(" ");
 			if (!sayMessage) return;
 			message.delete().catch(O_o=>{});
 			message.channel.send(sayMessage);
-		}	
+		}
+		}
 		
 		if (message.content.startsWith("ping")) {
 			message.channel.send(`:ping_pong: pong! Mon ping est de : ${Date.now() - message.createdTimestamp} ms`);
