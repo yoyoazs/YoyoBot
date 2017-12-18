@@ -46,6 +46,7 @@
 //		member.guild.channels.find("name", "departarrivees").send(`:hamburger: ${member.user.username} vien de rejoindre la famille des tutos !`);
 
 	bot.on("message", (message) => {
+		if (message.channel.type === "dm") return;
 
 		const arg = message.content.slice(prefix.length).trim().split(/ +/g);
 		const command = arg.shift().toLowerCase();
@@ -71,47 +72,6 @@
 		db.get("xp").find({user: msgauthor }).assign({user: msgauthor, xp: userxp[1] +=1}).write();
 
 		}
-
-		if(message.content === prefix+ "help"){
-			message.channel.send(" ", { embed: { 
-				title: 'Les commandes du bot :',
-				url: '',
-				fields: [
-					{
-					name: `${prefix}help mod`, 
-					value: `Pour voir les commandes pour les modérateur !`,
-					},
-					{
-					name: `${prefix}help interaction`,
-					value: `Pour voir les intéraction du bot !`,
-					},
-					{
-					name: `${prefix}help recherche`,
-					value: `Pour voir les commandes qui vous permet de faire des recherche !`,
-					},
-					{
-					name: `${prefix}help casino`,
-					value: `Pour voir les commandes qui vous permet de joué a un semblant de casino !`,	
-					},
-					{
-						name: `${prefix}help data`,
-						value: "Pour voir les commandes qui ont besoin de la base de donné !",
-					},
-					{
-						name: `${prefix}help information`,
-						value: "Pour voir les commandes qui vous donnes des informations !",
-					},
-					{
-						name: `${prefix}help autres`,
-						value: "Pour voir les autres commandes !",
-					},
-				],
-				footer: {
-					icon_url: bot.user.avatarURL,
-					text: bot.user.username	
-			}}})
-		}
-
 
 		if (message.content.startsWith(prefix + "wiki")){
 			if(!message.content.substr(5)) {
@@ -377,6 +337,7 @@
 
 			if(msg.content.startsWith(prefix + 'say')){
 			const sayMessage = arg.join(" ");
+			if (!sayMessage) return;
 			message.delete().catch(O_o=>{});
 			message.channel.send(sayMessage);
 		}	
@@ -597,6 +558,7 @@
 				case "fetenoel":
 				message.delete()
 					var speudo = message.content.substr(11);
+				if (!speudo) return;
 							message.channel.send('', { embed: {
 				color: 543756,
 				author: {
@@ -880,256 +842,6 @@
 				});
 			}
 
-		if (message.content === prefix +"help mod"){
-			message.channel.send({ embed: {
-				author:{
-					name: message.author.username,
-					icon: message.author.avatarURL,
-					url: "",
-				},
-				title: "Commande pour les modérateurs:",
-				url: "",
-				fields:[
-					{
-						name: `${prefix}mute`,
-						value: "Permet de mute une personne spécifié !"
-					},
-					{
-						name: `${prefix}unmute`,
-						value: "Permet de unmute une personne spécifié !"
-					},
-					{
-						name: `${prefix}ban`,
-						value: "Permet de ban une personne spécifié !"
-					},
-					{
-						name: `${prefix}kick`,
-						value: "Permet de kick une personne spécifié !"
-					},
-					{
-						name: `${prefix}clear`,
-						value: "Permet de supprimé un nombre de méssages spécifié !"
-					},
-				],
-				footer: {
-					icon_url: bot.user.username,
-					text: bot.user.avatarURL
-				}
-
-			}})
-		}
-
-		if (message.content === prefix +"help recherche"){
-			message.channel.send({ embed: {
-				author:{
-					name: message.author.username,
-					icon: message.author.avatarURL,
-					url: "",
-				},
-				title: "Commande qui permette de faire des recherche:",
-				url: "",
-				fields:[
-					{
-						name: `${prefix}wiki <recherche>`,
-						value: "Permet de faire une recherche sur wikipédia !"
-					},
-					{
-						name: `${prefix}google <recherche>`,
-						value: "Permet de faire une recherche sur google !"
-					},
-					{
-						name: `${prefix}méteo <ville> <pays>`,
-						value: "Permet de recherché la méteo qui fait dans une ville spécifié !"
-					},
-				],
-				footer: {
-					icon_url: bot.user.username,
-					text: bot.user.avatarURL
-				}
-
-			}})
-		}
-
-		if (message.content === prefix +"help interactoion"){
-			message.channel.send({ embed: {
-				author:{
-					name: message.author.username,
-					icon: message.author.avatarURL,
-					url: "",
-				},
-				title: "",
-				url: "",
-				fields:[
-					{
-						name: `Comment vas-tu bot ?`,
-						value: "Le bot choisit aléatoirement entre deux réponse et vous répond s'il il vas bien ou pas !"
-					},
-					{
-						name: `ping`,
-						value: "Le bot vous répond pong plus son nombre de ms !"
-					},
-				],
-				footer: {
-					icon_url: bot.user.username,
-					text: bot.user.avatarURL
-				}
-
-			}})
-		}
-
-		if (message.content === prefix +"help casino"){
-			message.channel.send({ embed: {
-				author:{
-					name: message.author.username,
-					icon: message.author.avatarURL,
-					url: "",
-				},
-				title: "",
-				url: "",
-				fields:[
-					{
-						name: `${prefix}roll`,
-						value: "Le bot répond un nombre aléatoire entre 1 et 100 !"
-					},
-					{
-						name: `${prefix}flip`,
-						value: "Le bot lance une piéce et dit si elle est tombé sur pile ou sur face !"
-					},
-					{
-						name: `${prefix}roulette`,
-						value: "Le bot lance la roulette et dit si la boulle est tombé sur le rouge, le noir ou le vert !"
-					},
-				],
-				footer: {
-					icon_url: bot.user.username,
-					text: bot.user.avatarURL
-				}
-
-			}})
-		}
-
-		if (message.content === prefix +"help data"){
-			message.channel.send({ embed: {
-				author:{
-					name: message.author.username,
-					icon: message.author.avatarURL,
-					url: "",
-				},
-				title: "",
-				url: "",
-				fields:[
-					{
-						name: `${prefix}newblague <blague>`,
-						value: "Permet rajouté une blague a la base de donné !"
-					},
-					{
-						name: `${prefix}raconteuneblague`,
-						value: "Le bot raconte une blague !"
-					},
-					{
-						name: `${prefix}shop`,
-						value: "Permet de voir les items disponible dans le shop !"
-					},
-					{
-						name: `${prefix}buyitem <id>`,
-						value: "Permet d'acheté un items disponible dans le shop !"
-					},
-				],
-				footer: {
-					icon_url: bot.user.username,
-					text: bot.user.avatarURL
-				}
-
-			}})
-		}
-
-		if (message.content === prefix +"help information"){
-			message.channel.send({ embed: {
-				author:{
-					name: message.author.username,
-					icon: message.author.avatarURL,
-					url: "",
-				},
-				title: "",
-				url: "",
-				fields:[
-					{
-						name: `${prefix}info`,
-						value: "Permet de voir vos informations !"
-					},
-					{
-						name: `${prefix}infobot`,
-						value: "Permet de voir les informations du bot !"
-					},
-					{
-						name: `${prefix}niveau`,
-						value: "Permet de voir votre niveau !"
-					},
-					{
-						name: `${prefix}up`,
-						value: "Permet de voir depuis quand le bot est démaré !"
-					},
-				],
-				footer: {
-					icon_url: bot.user.username,
-					text: bot.user.avatarURL
-				}
-
-			}})
-		}
-
-		if (message.content === prefix +"help autres"){
-			message.channel.send({ embed: {
-				author:{
-					name: message.author.username,
-					icon: message.author.avatarURL,
-					url: "",
-				},
-				title: "",
-				url: "",
-				fields:[
-					{
-						name: `${prefix}say <text>`,
-						value: "Permet de faire parlé le bot !"
-					},
-					{
-						name: `${prefix}nouveauté`,
-						value: "Permet de voir les nouveautés du bot !"
-					},
-					{
-						name: `${prefix}help`,
-						value: "Permet de voir les commandes du bot !"
-					},
-					{
-						name: `${prefix}invitation`,
-						value: "Permet de voir l'invitation du bot !"
-					},
-					{
-						name: `${prefix}créateur`,
-						value: "Permet de voir qui est le créateur du bot !"
-					},
-					{
-						name: `${prefix}8ball <question>`,
-						value: "Le bot répondera a votre question !"
-					},
-					{
-						name: `${prefix}fetenoel <speudo>`,
-						value: "Permet de fêté noel a une personne !"
-					},
-					{
-						name: `${prefix}dog`,
-						value: "Permet d'envoyé une photo d'une chien"
-					},
-				],
-				footer: {
-					icon_url: bot.user.username,
-					text: bot.user.avatarURL
-				}
-
-			}})
-		}
-	/////////////////////////////////////////////////////////////
-
 	if (message.content.startsWith(prefix + "logout")) {
 		
 				if(message.author.id == "285345858348646400"){
@@ -1173,11 +885,11 @@
 			if (args1.length === 0) {
 			afk[msg.author.id] = {"reason" : true};
 			msg.delete();
-			msg.channel.send(`tu es désormais afk, fait **${prefix}remafk** pour enlever ton afk`).then(x => DeleteQueue.add(x, 10000));
+			msg.channel.send(`tu es désormais afk, fait **${prefix}remafk** pour enlever ton afk`);
 			}else{
 			afk[msg.author.id] = {"reason" : args1.join(" ")};
 			msg.delete();
-			msg.channel.send(`tu es désormais afk, fait **${prefix}remafk** pour enlever ton afk`).then(x => DeleteQueue.add(x, 10000));
+			msg.channel.send(`tu es désormais afk, fait **${prefix}remafk** pour enlever ton afk`);
 			}
 			fs.writeFile("./afks.json", JSON.stringify(afk), (err) => { if (err) console.error(err);});
 			}
@@ -1189,34 +901,39 @@
 			if (afk[msg.mentions.users.first().id].reason === true) {
 			message.channel.send(`@${mentionned.username} is AFK: pas de raison`);
 			}else{
-			message.channel.send(`@${mentionned.username} is AFK: ${afk[msg.mentions.users.first().id].reason}`);
+			message.channel.send(`@${mentionned.username} est AFK, réson : ${afk[msg.mentions.users.first().id].reason}`);
 			}
 			}
 			}
 
-			if(message.content.startsWith(prefix + "test")){
+			if(message.content.startsWith(prefix + "nouveauté")){
 				
 				(async function() {
 				
-				 const mainMessage = await message.channel.send("Test des réactions:\n **Page.1**");
+				 const mainMessage = await message.channel.send("**Version du bot:**\n V.1.0.5");
 				
-				await mainMessage.react("◀");
-				await mainMessage.react("▶");
+				await mainMessage.react("✏");
+				await mainMessage.react("🔨");
+				await mainMessage.react("🔧");
 				await mainMessage.react("🛑");
 				
 				const panier = mainMessage.createReactionCollector((reaction, user) => user.id === message.author.id);
 				 
 				panier.on('collect', async(reaction) => 
 				{
-				 if (reaction.emoji.name === "◀") {
+				 if (reaction.emoji.name === "✏") {
 				
-				mainMessage.edit("Test des réactions:\n **Page.1**");
+				mainMessage.edit("**Version du bot**:\n V.1.0.5");
 				
 				 }
-				if (reaction.emoji.name === "▶") {
+				if (reaction.emoji.name === "🔨") {
 				
-				mainMessage.edit("Test des réactions:\n **Page.2**");
+				mainMessage.edit("**Ajout:**\nLa commande 'afk' a étais ajouté mais n'est pas encore disponible.\nLa commande 'logout' a étais ajouté mais n'est disponible que pour le créateur du bot.");
 				 
+				}
+				if (reaction.emoji.name === "🔧") {
+
+					mainMessage.edit("**Amélioration:**\nLa commande nouveauté a étais amélioré.")
 				}
 				if (reaction.emoji.name === "🛑") {
 				
@@ -1229,6 +946,71 @@
 				});
 				 }());
 				}
+
+				if(message.content.startsWith(prefix + "help")){
+					
+					(async function() {
+					
+					 const mainMessage = await message.channel.send("Voici la commande Help, clique sur les différent réaction pour voir les commandes !");
+					
+					await mainMessage.react("🔨");
+					await mainMessage.react("📡");
+					await mainMessage.react("💻");
+					await mainMessage.react("🎰");
+					await mainMessage.react("🎒");
+					await mainMessage.react("📻");
+					await mainMessage.react("➕");
+					await mainMessage.react("🎉");
+					await mainMessage.react("🛑");
+					
+					const panier = mainMessage.createReactionCollector((reaction, user) => user.id === message.author.id);
+					 
+					panier.on('collect', async(reaction) => 
+					{
+					if (reaction.emoji.name === "🔨") {
+					
+					mainMessage.edit("**Les commandes pour les modérateurs:**\nLa commande 'mute <speudo>' qui permet de mute une personne spécifié.\nLa commande 'unmute <speudo>' qui permet d'unmute une personne spécifié.\nLa commande 'kick <speudo>' qui permet de kick une personne spécifié.\nLa commande 'ban <speudo>' qui permet de ban une personne spécifié.\nLa commande 'clear <nombre>' qui permet de supprimé un nombre de messages spécifié.");				
+					 }
+					if (reaction.emoji.name === "📡") {
+					
+					mainMessage.edit("**Les commandes de recherche:**\nLa commande 'google <recherche>' sert a faire une recherche sur google.\nLa commande 'wiki <recherche>' sert a faire une recherche sur wikipédia.\nLa commande 'méteo <ville> <pays>' sert a regardé la vidéo de votre ville.");					 
+					}
+					if (reaction.emoji.name === "💻") {
+	
+						mainMessage.edit("**Les intéractions:**\nSi vous dit 'Comment vas-tu bot ?', le bot vous répond (en dévellopement).\nSi vous dit 'ping', le bot vous répond pong + les ms du bot.")
+					}
+					if (reaction.emoji.name === "🎰") {
+
+					mainMessage.edit("**Les commandes de jeux:**\nLa commande 'roll': Le bot choisit un nombre entre 1 et 100 et vous le dit.\nLa commande 'flip': Le bot lance la piece et vous dit si elle est tombé sur pile ou sur face.\nLa commande 'roulett': Le bot fait tourner la roulette et vous dit si la boulle est tombé sur le rouge, le noir ou le vert.")
+					}
+					if (reaction.emoji.name === "🎒") {
+						
+					mainMessage.edit("**Les commandes qui ont besoin d'être stocker:**\nLa commande 'newblague' qui permet d'ajouté une blague a la base de donnée.\nLa commande 'raconteuneblague', le bot raconte un blague.\nLa commande 'shop' pour voir les items disponible dans le shop.\nLa commande 'buyitem' qui permet d'acheté un objet disponible.")
+					}
+					if (reaction.emoji.name === "📻") {
+						
+					mainMessage.edit("**Les commandes informations:**\nLa commande 'info' permet de voir vos information.\nLa commande 'infobot' permet de voir les irformations du bot.\nLa commande 'niveau' pour voir votre niveau.\nLa commande 'up' pour voir depuis quand le bot est démaré.")
+					}
+					if (reaction.emoji.name === "➕") {
+						
+					mainMessage.edit("**Les commandes non répertorié**\nLa commande 'nouveauté' qui permet de voir les nouveautés.\nLa commande 'help' qui permet de voir les commandes.\nLa commande 'invitation' qui permet de voir l'invitation du bot.\nLa commande 'créateeur' qui permet de voir le créateur du bot.\nLa commande '8ball <question>' qui permet de poser une question au bot.\nLa commande 'dog', le bot envoi une image d'un chien.")
+					}
+					if (reaction.emoji.name === "🎉") {
+
+					mainMessage.edit("**La commande spécial:**\nLa commande 'fetenoel <speudo>' permet de fêté noël a une personne spécifier.")
+					}
+					if (reaction.emoji.name === "🛑") {
+					
+					mainMessage.delete()
+					
+					 }
+					
+					 await reaction.remove(message.author.id);
+					
+					});
+					 }());
+					}
+
 				});
 	function random(min, max) {
 		min = Math.ceil(0);
