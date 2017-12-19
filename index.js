@@ -1,4 +1,5 @@
 	const Discord = require("discord.js");
+	const gist = require('snekgist')
 	const low = require('lowdb')
 	const FileSync = require('lowdb/adapters/FileSync')
 	const weather = require("weather-js");
@@ -12,6 +13,10 @@
 	const db = low(adapter);
 	const shopdb = low(shopadapter)
 
+	const idéeadapter = new FileSync('idéebase.json');
+	const dbi = low(idéeadapter)
+
+	dbi.defaults({ idées: []}).write()
 
 	db.defaults({ blagues: [], xp: [], inventory: []}).write()
 
@@ -40,7 +45,7 @@
 	})
 	
 
-	bot.login(process.env.TOKEN);
+	bot.login("Mzg3NjY5MTMzMzA0NTI4ODk3.DRm2uw.LvY-7diNhPaNSDyWc0IbDCoqGvw");
 
 //	bot.on("guildMemberAdd",member =>{
 //		member.guild.channels.find("name", "departarrivees").send(`:hamburger: ${member.user.username} vien de rejoindre la famille des tutos !`);
@@ -336,13 +341,15 @@
 			}
 
 			if(msg.content.startsWith(prefix + 'say')){
-			if(message.author.id == "285345858348646400"){
+				if(message.author.id == "285345858348646400"){
 			const sayMessage = arg.join(" ");
 			if (!sayMessage) return;
 			message.delete().catch(O_o=>{});
 			message.channel.send(sayMessage);
-		}
-		}
+			}else{
+				message.channel.send("**erreur** Tu n'est pas mon créateur")
+			}	
+	}
 		
 		if (message.content.startsWith("ping")) {
 			message.channel.send(`:ping_pong: pong! Mon ping est de : ${Date.now() - message.createdTimestamp} ms`);
@@ -366,6 +373,17 @@
 				.write();
 			break;
 
+			case "idée":	
+			var value = message.content.substr(7);
+			var author = message.author.username;
+			var number = dbi.get('idées').map('id').value();
+			message.reply("Votre idée a bien étais ajouté a liste, merci de votre participation pour amélioré le bot.")
+
+			dbi.get('idées')
+				.push({ idée_value: value, idée_author: author })
+				.write();
+				break;
+			
 			case "raconteuneblague":
 			console.log('blague');
 
@@ -453,7 +471,7 @@
 			
 				var itembuying = message.content.substr(10);
 				if (!itembuying){
-					itembuying = "Identerminé";
+					itembuying = "Indeterminé";
 				}else{
 					console.log(`Shoplogs: Demmande d'achat d'item ${itembuying}`)
 					if (shopdb.get("shop_items").find({itemID: itembuying}).value()){
@@ -850,7 +868,7 @@
 		
 					message.channel.send("Arrêt en cour");
 		
-						console.log('/ Je suis désormais offline / ');
+						console.log('/ Je suis désormais offline /');
 		
 						bot.destroy();
 		
@@ -858,7 +876,7 @@
 		
 				} else {
 		
-					message.channel.send("**Erreur** ! Tu n'es pas l'owner")
+					message.channel.send("**Erreur** ! Tu n'es pas mon créateur")
 		
 				}
 			}
@@ -901,9 +919,9 @@
 			if(msg.mentions.users.size > 0) {
 			if (afk[msg.mentions.users.first().id]) {
 			if (afk[msg.mentions.users.first().id].reason === true) {
-			message.channel.send(`@${mentionned.username} is AFK: pas de raison`);
+			message.channel.send(`@${mentionned.username} iest AFK: pas de raison`);
 			}else{
-			message.channel.send(`@${mentionned.username} est AFK, réson : ${afk[msg.mentions.users.first().id].reason}`);
+			message.channel.send(`@${mentionned.username}  est AFK, réson : ${afk[msg.mentions.users.first().id].reason}`);
 			}
 			}
 			}
@@ -930,12 +948,12 @@
 				 }
 				if (reaction.emoji.name === "🔨") {
 				
-				mainMessage.edit("**Ajout:**\nLa commande 'afk' a étais ajouté mais n'est pas encore disponible.\nLa commande 'logout' a étais ajouté mais n'est disponible que pour le créateur du bot.");
+				mainMessage.edit("**Ajout:**\nLa commande 'logout' a étais ajouté mais n'est disponible que pour le créateur du bot.\La commande 'eval' a étais ajouté mais n'est disponible que pour le créateur du bot.");
 				 
 				}
 				if (reaction.emoji.name === "🔧") {
 
-					mainMessage.edit("**Amélioration:**\nLa commande nouveauté a étais amélioré.")
+					mainMessage.edit("**Amélioration:**\nLa commande nouveauté a étais amélioré.\nLa commande help a étais amélioré.\La commande 'afk' est maintenant disponible.\nLa commande 'say' est disponible que pour le créateur du bot.")
 				}
 				if (reaction.emoji.name === "🛑") {
 				
@@ -1013,9 +1031,84 @@
 					 }());
 					}
 
-				});
+					if (msgc.startsWith(prefix + "infoserve")) {
+						message.channel.send("", {
+							embed: {
+								color: 0xE15306, //La couleur que l'on voit sur le côté gauche de l'embed
+								author: message.author.name,
+				
+								title: 'Informations sur le serveur', //Le titre de l'embed
+								description: '', //La description, dans ce cas-ci mieux vaut la laisser vide
+								fields: [
+									{
+										name: '**Nom**',
+										value: message.guild.name,
+										inline: true
+					}, {
+										name: '**Membres**',
+										value: message.guild.memberCount,
+										inline: true
+					}, {
+										name: '**Propriétaire**',
+										value: message.guild.owner.user.tag,
+										inline: true
+					}, {
+										name: '**Région**',
+										value: message.guild.region,
+										inline: true
+					}, {
+										name: '**ID**',
+										value: message.guild.id,
+										inline: true
+								   }],
+								thumbnail: {
+									url: message.guild.iconURL //l'avatar du bot
+								},
+								timestamp: new Date(), //La date d'aujourd'hui
+							}
+						});
+					};
+
+					bot.on('guildMemberAdd', member => {
+						member.guild.defaultChannel.send(":tada: Hey " + member + " ! Bienvenue sur " + member.guild.name + "!");
+					});
+					bot.on('guildMemberRemove', member => {
+						member.guild.defaultChannel.send(":frowning: " + member.user.tag + " a quitté le serveur...");
+					});
+
+						function clean(text) {
+							if (typeof(text) === "string") return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
+							else return text;
+	}
+});
+
+//	bot.on("message", (message) => {
+//		let input = message.content.replace(prefix + "eval ", "");
+//		if(message.author.id == "285345858348646400"){
+//		let color = 0xFFFFFF;
+//		let output = "No output was defined";
+//		try {
+//		let result = eval(input);
+//		color = 0x00E676;
+//		output = result;
+//		} catch (error) {
+//			color = 0xFF5252;
+//			output = error;
+//			}
+//		const eval33 = new Discord.RichEmbed()
+//			.setAuthor("✅ Evaluation Successful! ✅")
+//			.setColor(0x1b6bd3)
+//			.addField(':inbox_tray: Input', "```js\n" + input + "```", true)
+//			.addField(':outbox_tray: Output', "```js\n" + output + "\n```", false)
+//			.setTimestamp()
+//		message.channel.send({ embed: eval33 })
+//	}
+//					});
+//								
 	function random(min, max) {
 		min = Math.ceil(0);
 		max = Math.floor(blaguenumber);
 		randum = Math.floor(Math.random() * (max - min + 1) + min);
 	}
+
+	
