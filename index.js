@@ -44,11 +44,7 @@
 			bot.user.setGame(jeux(), "http://twitch.tv/URL%22")     }, 5000)
 	})
 	
-
-	bot.login("Mzg3NjY5MTMzMzA0NTI4ODk3.DRm2uw.LvY-7diNhPaNSDyWc0IbDCoqGvw");
-
-//	bot.on("guildMemberAdd",member =>{
-//		member.guild.channels.find("name", "departarrivees").send(`:hamburger: ${member.user.username} vien de rejoindre la famille des tutos !`);
+bot.login(process.env.TOKEN);
 
 	bot.on("message", (message) => {
 		if (message.channel.type === "dm") return;
