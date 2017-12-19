@@ -1,5 +1,4 @@
 	const Discord = require("discord.js");
-	const gist = require('snekgist')
 	const low = require('lowdb')
 	const FileSync = require('lowdb/adapters/FileSync')
 	const weather = require("weather-js");
