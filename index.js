@@ -54,30 +54,30 @@ bot.login(process.env.TOKEN);
 			return;
 		}
 
-		if (message.content.startsWith(prefix + "eval")){
-		if (message.author.id == "285345858348646400") {
-		let input = message.content.substr(7)
-		let color = 0xFFFFFF;
-		let output = "No output was defined";
-		try {
-		let result = eval(input);
-		color = 0x00E676;
-		output = result;
-		} catch (error) {
-			color = 0xFF5252;
-			output = error;
-			}
-		const eval33 = new Discord.RichEmbed()
-			.setAuthor("✅ Evaluation de la commande réusi! ✅")
-			.setColor(0x1b6bd3)
-			.addField(':inbox_tray: Le code', "```js\n" + input + "```", true)
-			.addField(':outbox_tray: Le résultat', "```js\n" + output + "\n```", false)
-			.setTimestamp()
-		message.channel.send({ embed: eval33 })
-	}else{
-		message.channel.send("Tu n'est pas mon créateur.")
-	}
-}
+	//	if (message.content.startsWith(prefix + "eval")){
+	//	if (message.author.id == "285345858348646400") {
+	//	let input = message.content.substr(7)
+	//	let color = 0xFFFFFF;
+	//	let output = "No output was defined";
+	//	try {
+	//	let result = eval(input);
+	//	color = 0x00E676;
+	//	output = result;
+	//	} catch (error) {
+	//		color = 0xFF5252;
+	//		output = error;
+	//		}
+	//	const eval33 = new Discord.RichEmbed()
+	//		.setAuthor("✅ Evaluation de la commande réusi! ✅")
+	//		.setColor(0x1b6bd3)
+	//		.addField(':inbox_tray: Le code', "```js\n" + input + "```", true)
+	//		.addField(':outbox_tray: Le résultat', "```js\n" + output + "\n```", false)
+	//		.setTimestamp()
+	//	message.channel.send({ embed: eval33 })
+	//}else{
+	//	message.channel.send("Tu n'est pas mon créateur.")
+	//}
+//}
 
 
 		const arg = message.content.slice(prefix.length).trim().split(/ +/g);
