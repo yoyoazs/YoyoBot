@@ -6,8 +6,6 @@
 	var AuthDetails = require("./auth.json");
 	const fs = require("fs");
 
-const client = new Client();
-const { Client } = require('discord.js');
 const yt = require('ytdl-core');
 let queue = {};
 
