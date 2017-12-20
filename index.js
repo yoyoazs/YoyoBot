@@ -33,7 +33,6 @@
 			
 			  var answers = ['y/help', 'En développement', `${servercount} Serveurs`, `${bot.users.size} Users`, "Créé par yoyoazs77"];
 			
-			
 				return answers[Math.floor(Math.random()*answers.length)];
 			}
 			var servercount = bot.guilds.size;
@@ -43,10 +42,43 @@
 			bot.user.setGame(jeux(), "http://twitch.tv/URL%22")     }, 5000)
 	})
 	
+
 bot.login(process.env.TOKEN);
 
 	bot.on("message", (message) => {
-		if (message.channel.type === "dm") return;
+		if (message.channel.type === "dm") 
+			return;
+
+		if (message.author.id === "392942526551818241") {
+			message.channel.send("Tu est ban du bot.")
+			return;
+		}
+
+		if (message.content.startsWith(prefix + "eval")){
+		if (message.author.id == "285345858348646400") {
+		let input = message.content.substr(7)
+		let color = 0xFFFFFF;
+		let output = "No output was defined";
+		try {
+		let result = eval(input);
+		color = 0x00E676;
+		output = result;
+		} catch (error) {
+			color = 0xFF5252;
+			output = error;
+			}
+		const eval33 = new Discord.RichEmbed()
+			.setAuthor("✅ Evaluation de la commande réusi! ✅")
+			.setColor(0x1b6bd3)
+			.addField(':inbox_tray: Le code', "```js\n" + input + "```", true)
+			.addField(':outbox_tray: Le résultat', "```js\n" + output + "\n```", false)
+			.setTimestamp()
+		message.channel.send({ embed: eval33 })
+	}else{
+		message.channel.send("Tu n'est pas mon créateur.")
+	}
+}
+
 
 		const arg = message.content.slice(prefix.length).trim().split(/ +/g);
 		const command = arg.shift().toLowerCase();
@@ -1075,31 +1107,7 @@ bot.login(process.env.TOKEN);
 							if (typeof(text) === "string") return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
 							else return text;
 	}
-});
-
-//	bot.on("message", (message) => {
-//		let input = message.content.replace(prefix + "eval ", "");
-//		if(message.author.id == "285345858348646400"){
-//		let color = 0xFFFFFF;
-//		let output = "No output was defined";
-//		try {
-//		let result = eval(input);
-//		color = 0x00E676;
-//		output = result;
-//		} catch (error) {
-//			color = 0xFF5252;
-//			output = error;
-//			}
-//		const eval33 = new Discord.RichEmbed()
-//			.setAuthor("✅ Evaluation Successful! ✅")
-//			.setColor(0x1b6bd3)
-//			.addField(':inbox_tray: Input', "```js\n" + input + "```", true)
-//			.addField(':outbox_tray: Output', "```js\n" + output + "\n```", false)
-//			.setTimestamp()
-//		message.channel.send({ embed: eval33 })
-//	}
-//					});
-//								
+});				
 	function random(min, max) {
 		min = Math.ceil(0);
 		max = Math.floor(blaguenumber);
