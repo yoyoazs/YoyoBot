@@ -43,7 +43,7 @@
 	})
 	
 
-bot.login(process.env.TOKEN);
+	bot.login(process.env.TOKEN);
 
 	bot.on("message", (message) => {
 		if (message.channel.type === "dm") 
@@ -54,30 +54,30 @@ bot.login(process.env.TOKEN);
 			return;
 		}
 
-	//	if (message.content.startsWith(prefix + "eval")){
-	//	if (message.author.id == "285345858348646400") {
-	//	let input = message.content.substr(7)
-	//	let color = 0xFFFFFF;
-	//	let output = "No output was defined";
-	//	try {
-	//	let result = eval(input);
-	//	color = 0x00E676;
-	//	output = result;
-	//	} catch (error) {
-	//		color = 0xFF5252;
-	//		output = error;
-	//		}
-	//	const eval33 = new Discord.RichEmbed()
-	//		.setAuthor("✅ Evaluation de la commande réusi! ✅")
-	//		.setColor(0x1b6bd3)
-	//		.addField(':inbox_tray: Le code', "```js\n" + input + "```", true)
-	//		.addField(':outbox_tray: Le résultat', "```js\n" + output + "\n```", false)
-	//		.setTimestamp()
-	//	message.channel.send({ embed: eval33 })
-	//}else{
-	//	message.channel.send("Tu n'est pas mon créateur.")
-	//}
-//}
+		if (message.content.startsWith(prefix + "eval")){
+		if (message.author.id == "285345858348646400") {
+		let input = message.content.substr(7)
+		let color = 0xFFFFFF;
+		let output = "No output was defined";
+		try {
+		let result = eval(input);
+		color = 0x00E676;
+		output = result;
+		} catch (error) {
+			color = 0xFF5252;
+			output = error;
+			}
+		const eval33 = new Discord.RichEmbed()
+			.setAuthor("✅ Evaluation de la commande réusi! ✅")
+			.setColor(0x1b6bd3)
+			.addField(':inbox_tray: Le code', "```js\n" + input + "```", true)
+			.addField(':outbox_tray: Le résultat', "```js\n" + output + "\n```", false)
+			.setTimestamp()
+		message.channel.send({ embed: eval33 })
+	}else{
+		message.channel.send("Tu n'est pas mon créateur.")
+	}
+}
 
 
 		const arg = message.content.slice(prefix.length).trim().split(/ +/g);
@@ -240,11 +240,11 @@ bot.login(process.env.TOKEN);
 		}
 
 		if (message.content === prefix + "niveau") {
+			var userXpDB = db.get("xp").filter({user: msgauthor}).find("xp").value();
+			var userxp = Object.values(userXpDB);
 			var value = message.content.substr(9);
 			var name = value;
 			var icon = message.author.avatarURL;
-			var xp = db.get("xp").filter({user: name}).find("xp").value()
-			var xpfinal = Object.values(xp);
 			message.channel.send('', { embed: {
 				corlor: 543756,
 				author: {
@@ -256,7 +256,7 @@ bot.login(process.env.TOKEN);
 			fields: [
 				{
 					name: 'XP', 
-					value: `${xpfinal[1]}`
+					value: `${userxp[1]}`
 				},
 				],
 				footer: {
@@ -659,6 +659,7 @@ bot.login(process.env.TOKEN);
 
 		var msgauthor = message.author.tag;
 		const msgc = message.content;
+		
 
 	if(message.content === prefix +"info") {
 		var userXpDB = db.get("xp").filter({user: msgauthor}).find("xp").value();
@@ -1113,5 +1114,3 @@ bot.login(process.env.TOKEN);
 		max = Math.floor(blaguenumber);
 		randum = Math.floor(Math.random() * (max - min + 1) + min);
 	}
-
-	
