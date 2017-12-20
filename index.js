@@ -1194,7 +1194,7 @@ const commands = {
 };
 	});
 
-client.on('ready', () => {
+bot.on('ready', () => {
 	console.log('ready!');
 });
 	function random(min, max) {
