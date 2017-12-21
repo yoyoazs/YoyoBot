@@ -1,22 +1,29 @@
-	const Discord = require("discord.js");
-	const low = require('lowdb')
-	const FileSync = require('lowdb/adapters/FileSync')
-	const weather = require("weather-js");
-	const Wiki = require("wikijs");
-	var AuthDetails = require("./auth.json");
-	const fs = require("fs");
+	const Discord = require("discord.js"),
+	low = require('lowdb'),
+	FileSync = require('lowdb/adapters/FileSync'),
+	weather = require("weather-js"),
+	Wiki = require("wikijs"),
+	AuthDetails = require("./auth.json"),
+	fs = require("fs"),
+	express = require("express"),
+	app = express(),
+	yt = require("./youtube_plugin"),
+	youtube_plugin = new yt(),
+	Music = require("./Music.js"),
+	functionHelper = require('./functionHelpers.js'),
+	ffmpeg = require("ffmpeg"),
+	search = require('youtube-search'),
+	music = new Music(),
+	con = console.log,
 
-const yt = require('ytdl-core');
-let queue = {};
+	adapter = new FileSync('database.json'),
+	shopadapter = new FileSync('shop.json'),
+	config = new FileSync('config.json'),
+	db = low(adapter),
+	shopdb = low(shopadapter),
 
-	const adapter = new FileSync('database.json');
-	const shopadapter = new FileSync('shop.json')
-	const config = new FileSync('config.json')
-	const db = low(adapter);
-	const shopdb = low(shopadapter)
-
-	const idéeadapter = new FileSync('idéebase.json');
-	const dbi = low(idéeadapter)
+	idéeadapter = new FileSync('idéebase.json'),
+	dbi = low(idéeadapter)
 
 	dbi.defaults({ idées: []}).write()
 
@@ -25,9 +32,12 @@ let queue = {};
 	var bot = new Discord.Client();
 	var prefix = ("y/");
 	var randnum = 0;
+	const opts = {
+		maxResults: 3,
+		key: AuthDetails.youtube_api_key
+	  };
 
 	var blaguenumber = db.get('blagues').map('blague_value').value();
-	con = console.log;
 
 	bot.on(("ready"), ()=> {
 		console.log("☻Bot démarré !!☻")
@@ -45,8 +55,7 @@ let queue = {};
 			bot.user.setGame(jeux(), "http://twitch.tv/URL%22")     }, 5000)
 	})
 	
-
-	bot.login(process.env.TOKEN);
+bot.login(process.env.TOKEN);
 
 	bot.on("message", (message) => {
 		if (message.channel.type === "dm") 
@@ -207,7 +216,7 @@ let queue = {};
 			text: bot.user.username			
 		},
 	}})
-	}
+	} 
 
 			if(message.content === prefix + 'up') {
 				message.delete()
@@ -382,10 +391,11 @@ let queue = {};
 	}
 		
 		if (message.content.startsWith("ping")) {
-			message.channel.send(`:ping_pong: pong! Mon ping est de : ${Date.now() - message.createdTimestamp} ms`);
-			console.log("ping pong");
+			message.channel.send('Pong...').then((msg) => {
+				msg.edit(`Pong! La latence est de ${msg.createdTimestamp - message.createdTimestamp}ms. La latence de l'API est de ${Math.round(client.ping)}ms`);
 		
-		}
+		})
+	}
 	
 		if (!message.content.startsWith(prefix)) return;
 
@@ -1111,94 +1121,86 @@ let queue = {};
 							if (typeof(text) === "string") return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
 							else return text;
 	}
-
-const commands = {
-	'play': (msg) => {
-		if (queue[msg.guild.id] === undefined) return msg.channel.sendMessage(`Add some songs to the queue first with ${tokens.prefix}add`);
-		if (!msg.guild.voiceConnection) return commands.join(msg).then(() => commands.play(msg));
-		if (queue[msg.guild.id].playing) return msg.channel.sendMessage('Already Playing');
-		let dispatcher;
-		queue[msg.guild.id].playing = true;
-
-		console.log(queue);
-		(function play(song) {
-			console.log(song);
-			if (song === undefined) return msg.channel.sendMessage('Queue is empty').then(() => {
-				queue[msg.guild.id].playing = false;
-				msg.member.voiceChannel.leave();
-			});
-			msg.channel.sendMessage(`Playing: **${song.title}** as requested by: **${song.requester}**`);
-			dispatcher = msg.guild.voiceConnection.playStream(yt(song.url, { audioonly: true }), { passes : tokens.passes });
-			let collector = msg.channel.createCollector(m => m);
-			collector.on('message', m => {
-				if (m.content.startsWith(tokens.prefix + 'pause')) {
-					msg.channel.sendMessage('paused').then(() => {dispatcher.pause();});
-				} else if (m.content.startsWith(tokens.prefix + 'resume')){
-					msg.channel.sendMessage('resumed').then(() => {dispatcher.resume();});
-				} else if (m.content.startsWith(tokens.prefix + 'skip')){
-					msg.channel.sendMessage('skipped').then(() => {dispatcher.end();});
-				} else if (m.content.startsWith('volume+')){
-					if (Math.round(dispatcher.volume*50) >= 100) return msg.channel.sendMessage(`Volume: ${Math.round(dispatcher.volume*50)}%`);
-					dispatcher.setVolume(Math.min((dispatcher.volume*50 + (2*(m.content.split('+').length-1)))/50,2));
-					msg.channel.sendMessage(`Volume: ${Math.round(dispatcher.volume*50)}%`);
-				} else if (m.content.startsWith('volume-')){
-					if (Math.round(dispatcher.volume*50) <= 0) return msg.channel.sendMessage(`Volume: ${Math.round(dispatcher.volume*50)}%`);
-					dispatcher.setVolume(Math.max((dispatcher.volume*50 - (2*(m.content.split('-').length-1)))/50,0));
-					msg.channel.sendMessage(`Volume: ${Math.round(dispatcher.volume*50)}%`);
-				} else if (m.content.startsWith(tokens.prefix + 'time')){
-					msg.channel.sendMessage(`time: ${Math.floor(dispatcher.time / 60000)}:${Math.floor((dispatcher.time % 60000)/1000) <10 ? '0'+Math.floor((dispatcher.time % 60000)/1000) : Math.floor((dispatcher.time % 60000)/1000)}`);
-				}
-			});
-			dispatcher.on('end', () => {
-				collector.stop();
-				play(queue[msg.guild.id].songs.shift());
-			});
-			dispatcher.on('error', (err) => {
-				return msg.channel.sendMessage('error: ' + err).then(() => {
-					collector.stop();
-					play(queue[msg.guild.id].songs.shift());
-				});
-			});
-		})(queue[msg.guild.id].songs.shift());
-	},
-	'join': (msg) => {
-		return new Promise((resolve, reject) => {
-			const voiceChannel = msg.member.voiceChannel;
-			if (!voiceChannel || voiceChannel.type !== 'voice') return msg.reply('I couldn\'t connect to your voice channel...');
-			voiceChannel.join().then(connection => resolve(connection)).catch(err => reject(err));
-		});
-	},
-	'add': (msg) => {
-		let url = msg.content.split(' ')[1];
-		if (url == '' || url === undefined) return msg.channel.sendMessage(`You must add a YouTube video url, or id after ${tokens.prefix}add`);
-		yt.getInfo(url, (err, info) => {
-			if(err) return msg.channel.sendMessage('Invalid YouTube Link: ' + err);
-			if (!queue.hasOwnProperty(msg.guild.id)) queue[msg.guild.id] = {}, queue[msg.guild.id].playing = false, queue[msg.guild.id].songs = [];
-			queue[msg.guild.id].songs.push({url: url, title: info.title, requester: msg.author.username});
-			msg.channel.sendMessage(`added **${info.title}** to the queue`);
-		});
-	},
-	'queue': (msg) => {
-		if (queue[msg.guild.id] === undefined) return msg.channel.sendMessage(`Add some songs to the queue first with ${tokens.prefix}add`);
-		let tosend = [];
-		queue[msg.guild.id].songs.forEach((song, i) => { tosend.push(`${i+1}. ${song.title} - Requested by: ${song.requester}`);});
-		msg.channel.sendMessage(`__**${msg.guild.name}'s Music Queue:**__ Currently **${tosend.length}** songs queued ${(tosend.length > 15 ? '*[Only next 15 shown]*' : '')}\n\`\`\`${tosend.slice(0,15).join('\n')}\`\`\``);
-	},
-	'help': (msg) => {
-		let tosend = ['```xl', tokens.prefix + 'join : "Join Voice channel of msg sender"',	tokens.prefix + 'add : "Add a valid youtube link to the queue"', tokens.prefix + 'queue : "Shows the current queue, up to 15 songs shown."', tokens.prefix + 'play : "Play the music queue if already joined to a voice channel"', '', 'the following commands only function while the play command is running:'.toUpperCase(), tokens.prefix + 'pause : "pauses the music"',	tokens.prefix + 'resume : "resumes the music"', tokens.prefix + 'skip : "skips the playing song"', tokens.prefix + 'time : "Shows the playtime of the song."',	'volume+(+++) : "increases volume by 2%/+"',	'volume-(---) : "decreases volume by 2%/-"',	'```'];
-		msg.channel.sendMessage(tosend.join('\n'));
-	},
-	'reboot': (msg) => {
-		if (msg.author.id == tokens.adminID) process.exit(); //Requires a node module like Forever to work.
-	}
-};
-	});
-
-bot.on('ready', () => {
-	console.log('ready!');
 });
-	function random(min, max) {
-		min = Math.ceil(0);
-		max = Math.floor(blaguenumber);
-		randum = Math.floor(Math.random() * (max - min + 1) + min);
+
+var messages = [];
+bot.on('message', message => {
+  const msgc = message.content;
+   music.setVoiceChannel(message.member.voiceChannel);
+    var array_msg = msgc.split(' ');
+            messages.push(message);
+            switch (array_msg[0]) {
+        case (prefix +"play") :
+            con("Play");
+            message.delete(message.author);
+            if (!music.getVoiceChannel()) return message.reply("Veuillez vous connectez en vocal !");
+            if (music.getTab(0) == null) return message.reply('Aucune musique, merci d\' en ajouté.');
+            else music.voice();
+            break;
+        case (prefix +"pause") :
+            con("Pause");
+            message.delete(message.author);
+            if (!music.getVoiceChannel()) return message.reply("Veuillez vous connectez en vocal !");
+            if (music.getTab(0) == null) return message.reply('Aucune musique, merci d\' en ajouté.');
+            music.pause();
+            break;
+        case (prefix + "resume") :
+            con("Resume");
+            message.delete(message.author);
+            if (!music.getVoiceChannel()) return message.reply("Veuillez vous connectez en vocal !");
+            if (music.getTab(0) == null) return message.reply('Aucune musique, merci d\' en ajouté.');
+            music.resume();
+            break;
+        case (prefix + "stop") :
+            con("Stop");
+            message.delete(message.author);
+            if (!music.getVoiceChannel()) return message.reply("Veuillez vous connectez en vocal !");
+            if (music.getTab(0) == null) return message.reply('Aucune musique, merci d\' en ajouté.');
+            else music.stop();
+            message.reply("La queue à était vidé !");
+            break;
+        case (prefix +"add") :
+            con("Add");
+            message.delete(message.author);
+            var link = msgc.split(' ');
+            link.shift();
+            link = link.join(' ');
+            search(link, opts, function(err, results) {
+                if(err) return con(err);
+                for (var y = 0; results[y].kind == 'youtube#channel'; y++);
+                message.channel.sendMessage(results[y].link);
+                music.setTabEnd(results[y].link);
+            });
+            break;
+        case (prefix +"link") :
+            con("Link");
+            message.delete(message.author);
+            var link = msgc.split(' ');
+            link.shift();
+            link = link.join(' ');
+            con(link);
+            music.setTabEnd(link);
+            break;
+        case (prefix +"volume") :
+            con("Volume");
+            message.delete(message.author);
+            var link = msgc.split(' ');
+            link.shift();
+            link = link.join(' ');
+            music.volume(link/100);
+            message.reply("le volume et maintenant à :" + link);
+            break;
+        case (prefix +"next") :
+            con("Next");
+            message.delete(message.author);
+            if (music.getI() < music.getLengthTab()) music.setI(this.i + 1);
+            if (music.getI() >= music.getLengthTab()) music.setI(0);
+            music.next();
+            break;
+	} 
+	/////////////////////////////////////
+
+	if (msgc.startsWith('!youtube')){
+		youtube_plugin.respond(message.content, message.channel , client);
 	}
+})
