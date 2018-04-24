@@ -1,4 +1,5 @@
-	const Discord = require("discord.js"),
+
+const Discord = require("discord.js"),
 	low = require('lowdb'),
 	FileSync = require('lowdb/adapters/FileSync'),
 	weather = require("weather-js"),
@@ -55,7 +56,26 @@
 			bot.user.setGame(jeux(), "http://twitch.tv/URL%22")     }, 5000)
 	})
 	
-bot.login(process.env.TOKEN);
+
+	bot.login(process.env.TOKEN);
+
+	function getStatData(location, message , $){
+
+		var selector = $('.stats-stat .value').eq(location).text();
+	  
+		var stat_array = $.parseHTML(selector);
+	  
+		var stat = 0;
+	  
+		if(stat_array == null || stat_array.lengh == 0){
+		  message.channel.send("Invalid User");
+		  return " ";
+		}else{
+		  stat = stat_array[0].data;
+		}
+	  
+		return stat;
+	  }
 
 	bot.on("message", (message) => {
 		if (message.channel.type === "dm") 
@@ -90,8 +110,6 @@ bot.login(process.env.TOKEN);
 		message.channel.send("Tu n'est pas mon créateur.")
 	}
 }
-
-
 		const arg = message.content.slice(prefix.length).trim().split(/ +/g);
 		const command = arg.shift().toLowerCase();
 
@@ -1121,86 +1139,33 @@ bot.login(process.env.TOKEN);
 							if (typeof(text) === "string") return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
 							else return text;
 	}
-});
 
-var messages = [];
-bot.on('message', message => {
-  const msgc = message.content;
-   music.setVoiceChannel(message.member.voiceChannel);
-    var array_msg = msgc.split(' ');
-            messages.push(message);
-            switch (array_msg[0]) {
-        case (prefix +"play") :
-            con("Play");
-            message.delete(message.author);
-            if (!music.getVoiceChannel()) return message.reply("Veuillez vous connectez en vocal !");
-            if (music.getTab(0) == null) return message.reply('Aucune musique, merci d\' en ajouté.');
-            else music.voice();
-            break;
-        case (prefix +"pause") :
-            con("Pause");
-            message.delete(message.author);
-            if (!music.getVoiceChannel()) return message.reply("Veuillez vous connectez en vocal !");
-            if (music.getTab(0) == null) return message.reply('Aucune musique, merci d\' en ajouté.');
-            music.pause();
-            break;
-        case (prefix + "resume") :
-            con("Resume");
-            message.delete(message.author);
-            if (!music.getVoiceChannel()) return message.reply("Veuillez vous connectez en vocal !");
-            if (music.getTab(0) == null) return message.reply('Aucune musique, merci d\' en ajouté.');
-            music.resume();
-            break;
-        case (prefix + "stop") :
-            con("Stop");
-            message.delete(message.author);
-            if (!music.getVoiceChannel()) return message.reply("Veuillez vous connectez en vocal !");
-            if (music.getTab(0) == null) return message.reply('Aucune musique, merci d\' en ajouté.');
-            else music.stop();
-            message.reply("La queue à était vidé !");
-            break;
-        case (prefix +"add") :
-            con("Add");
-            message.delete(message.author);
-            var link = msgc.split(' ');
-            link.shift();
-            link = link.join(' ');
-            search(link, opts, function(err, results) {
-                if(err) return con(err);
-                for (var y = 0; results[y].kind == 'youtube#channel'; y++);
-                message.channel.sendMessage(results[y].link);
-                music.setTabEnd(results[y].link);
-            });
-            break;
-        case (prefix +"link") :
-            con("Link");
-            message.delete(message.author);
-            var link = msgc.split(' ');
-            link.shift();
-            link = link.join(' ');
-            con(link);
-            music.setTabEnd(link);
-            break;
-        case (prefix +"volume") :
-            con("Volume");
-            message.delete(message.author);
-            var link = msgc.split(' ');
-            link.shift();
-            link = link.join(' ');
-            music.volume(link/100);
-            message.reply("le volume et maintenant à :" + link);
-            break;
-        case (prefix +"next") :
-            con("Next");
-            message.delete(message.author);
-            if (music.getI() < music.getLengthTab()) music.setI(this.i + 1);
-            if (music.getI() >= music.getLengthTab()) music.setI(0);
-            music.next();
-            break;
-	} 
-	/////////////////////////////////////
+	
+require('dotenv').config()
+const apiController = require('./api-controller.js')
 
-	if (msgc.startsWith('!youtube')){
-		youtube_plugin.respond(message.content, message.channel , client);
-	}
+
+client.on('message', msg => {
+  if(msg.content.startsWith('y/')){
+    // Removes the ! from the command
+    let command = msg.content.slice(1,msg.content.length)
+
+    // Separate out the command from arguments
+    let args = command.split(' ')
+    command = args[0]
+    args = args.slice(1, args.length)
+
+    switch(command){
+      case 'stats':
+        apiController.stats(msg, args)
+        break;
+
+      default:
+        msg.reply(`Command not found: !${command}`)
+        break;  
+    }
+
+
+  }
 })
+});
