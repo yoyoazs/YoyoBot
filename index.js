@@ -1145,7 +1145,7 @@ require('dotenv').config()
 const apiController = require('./api-controller.js')
 
 
-client.on('message', msg => {
+bot.on('message', msg => {
   if(msg.content.startsWith('y/')){
     // Removes the ! from the command
     let command = msg.content.slice(1,msg.content.length)
