@@ -1116,7 +1116,4 @@ const Discord = require("discord.js"),
 						member.guild.defaultChannel.send(":frowning: " + member.user.tag + " a quitté le serveur...");
 					});
 
-						function clean(text) {
-							if (typeof(text) === "string") return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
-							else return text;
-	}})
+	})
