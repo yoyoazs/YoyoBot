@@ -1,4 +1,3 @@
-
 const Discord = require("discord.js"),
 	low = require('lowdb'),
 	FileSync = require('lowdb/adapters/FileSync'),
@@ -58,24 +57,6 @@ const Discord = require("discord.js"),
 	
 
 	bot.login(process.env.TOKEN);
-
-	function getStatData(location, message , $){
-
-		var selector = $('.stats-stat .value').eq(location).text();
-	  
-		var stat_array = $.parseHTML(selector);
-	  
-		var stat = 0;
-	  
-		if(stat_array == null || stat_array.lengh == 0){
-		  message.channel.send("Invalid User");
-		  return " ";
-		}else{
-		  stat = stat_array[0].data;
-		}
-	  
-		return stat;
-	  }
 
 	bot.on("message", (message) => {
 		if (message.channel.type === "dm") 
@@ -1138,34 +1119,4 @@ const Discord = require("discord.js"),
 						function clean(text) {
 							if (typeof(text) === "string") return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
 							else return text;
-	}
-
-	
-require('dotenv').config()
-const apiController = require('./api-controller.js')
-
-
-bot.on('message', msg => {
-  if(msg.content.startsWith('y/')){
-    // Removes the ! from the command
-    let command = msg.content.slice(1,msg.content.length)
-
-    // Separate out the command from arguments
-    let args = command.split(' ')
-    command = args[0]
-    args = args.slice(1, args.length)
-
-    switch(command){
-      case 'stats':
-        apiController.stats(msg, args)
-        break;
-
-      default:
-        msg.reply(`Command not found: !${command}`)
-        break;  
-    }
-
-
-  }
-})
-});
+	}})
