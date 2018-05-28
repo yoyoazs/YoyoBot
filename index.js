@@ -3,17 +3,9 @@ const Discord = require("discord.js"),
 	FileSync = require('lowdb/adapters/FileSync'),
 	weather = require("weather-js"),
 	Wiki = require("wikijs"),
-	AuthDetails = require("./auth.json"),
 	fs = require("fs"),
 	express = require("express"),
 	app = express(),
-	yt = require("./youtube_plugin"),
-	youtube_plugin = new yt(),
-	Music = require("./Music.js"),
-	functionHelper = require('./functionHelpers.js'),
-	ffmpeg = require("ffmpeg"),
-	search = require('youtube-search'),
-	music = new Music(),
 	con = console.log,
 
 	adapter = new FileSync('database.json'),
@@ -29,13 +21,9 @@ const Discord = require("discord.js"),
 
 	db.defaults({ blagues: [], xp: [], inventory: []}).write()
 
-	var bot = new Discord.Client();
+	const bot = new Discord.Client();
 	var prefix = ("y/");
 	var randnum = 0;
-	const opts = {
-		maxResults: 3,
-		key: AuthDetails.youtube_api_key
-	  };
 
 	var blaguenumber = db.get('blagues').map('blague_value').value();
 
@@ -53,6 +41,10 @@ const Discord = require("discord.js"),
 			
 			setInterval(() => {
 			bot.user.setGame(jeux(), "http://twitch.tv/URL%22")     }, 5000)
+			for (const command in commands) {
+				exports.usage[command] = 0;
+			}
+			exports.usage.total = 0;
 	})
 	
 
@@ -60,6 +52,7 @@ const Discord = require("discord.js"),
 
 	bot.on("message", (message) => {
 		if (message.channel.type === "dm") 
+		  message.return("Je n'accepte pas les dm")
 			return;
 
 		if (message.author.id === "392942526551818241") {
@@ -391,7 +384,7 @@ const Discord = require("discord.js"),
 		
 		if (message.content.startsWith("ping")) {
 			message.channel.send('Pong...').then((msg) => {
-				msg.edit(`Pong! La latence est de ${msg.createdTimestamp - message.createdTimestamp}ms. La latence de l'API est de ${Math.round(client.ping)}ms`);
+				msg.edit(`Pong! La latence est de ${msg.createdTimestamp - message.createdTimestamp}ms. La latence de l'API est de ${Math.round(bot.ping)}ms`);
 		
 		})
 	}
@@ -634,6 +627,34 @@ const Discord = require("discord.js"),
 					{
 					name: `Si vous voullez faire de même`,
 					value: `faite y/fetenoel @` + message.author.username,
+					},
+				],
+				footer:{
+					icon_url: bot.user.avatarURL,
+					text: bot.user.username
+				},
+			}})
+
+				break;
+
+				case "live":
+				message.delete()
+					var streameur = arg(0)
+					var lien = arg(1)
+				if (!streameur) return;
+				if (!lien)return;
+							message.channel.send('', { embed: {
+				color: 543756,
+				author: {
+					name: message.author.tag,
+					icon_url: message.author.avatarURL
+				},
+				title: '',
+				url: '',
+				fields: [
+					{
+					name: `Bonjour à tous et a toute, nouveau live de ${streameur} `,
+					value: lien,
 					},
 				],
 				footer:{
@@ -1116,4 +1137,10 @@ const Discord = require("discord.js"),
 						member.guild.defaultChannel.send(":frowning: " + member.user.tag + " a quitté le serveur...");
 					});
 
-	})
+						function clean(text) {
+							if (typeof(text) === "string") return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
+							else return text;
+						}
+
+////////////////////////////////////
+})
