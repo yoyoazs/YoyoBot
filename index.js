@@ -29,22 +29,7 @@ const Discord = require("discord.js"),
 
 	bot.on(("ready"), ()=> {
 		console.log("☻Bot démarré !!☻")
-		function jeux() {
-			
-			
-			  var answers = ['y/help', 'En développement', `${servercount} Serveurs`, `${bot.users.size} Users`, "Créé par yoyoazs77"];
-			
-				return answers[Math.floor(Math.random()*answers.length)];
-			}
-			var servercount = bot.guilds.size;
-				var servers = bot.guilds.array().map(g => g.name).join(',');
-			
-			setInterval(() => {
-			bot.user.setGame(jeux(), "http://twitch.tv/URL%22")     }, 5000)
-			for (const command in commands) {
-				exports.usage[command] = 0;
-			}
-			exports.usage.total = 0;
+		bot.user.setPresence({ game: { name: '[y/help] créé par yoyoazs77'}})
 	})
 	
 
