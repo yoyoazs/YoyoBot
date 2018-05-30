@@ -32,7 +32,7 @@ const Discord = require("discord.js"),
 	});
 	
 
-	bot.login("process.env.TOKEN");
+	bot.login(process.env.TOKEN);
 
 
 	bot.on("message", message => {
