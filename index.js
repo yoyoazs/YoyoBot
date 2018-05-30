@@ -1,3 +1,10 @@
+const fortnite = require('fortnite.js');
+const client = new fortnite('-_-');
+ 
+client.get('ickerio', fortnite.PC)
+    .then(console.log) // Do stuff with the data
+    .catch(console.error); // Catch if there is an error
+
 const Discord = require("discord.js"),
 	low = require('lowdb'),
 	FileSync = require('lowdb/adapters/FileSync'),
@@ -6,8 +13,7 @@ const Discord = require("discord.js"),
 	fs = require("fs"),
 	express = require("express"),
 	app = express(),
-	con = console.log,
-
+	con = console.log;
 	adapter = new FileSync('database.json'),
 	shopadapter = new FileSync('shop.json'),
 	config = new FileSync('config.json'),
@@ -28,47 +34,22 @@ const Discord = require("discord.js"),
 	var blaguenumber = db.get('blagues').map('blague_value').value();
 
 	bot.on(("ready"), ()=> {
-		console.log("☻Bot démarré !!☻")
 		bot.user.setPresence({ game: { name: '[y/help] créé par yoyoazs77'}})
-	})
+		console.log("☻Bot démarré !!☻")
+	});
 	
 
-	bot.login(process.env.TOKEN);
+	bot.login("process.env.TOKEN");
 
-	bot.on("message", (message) => {
+
+	bot.on("message", message => {
 		if (message.channel.type === "dm") 
-		  message.return("Je n'accepte pas les dm")
 			return;
 
 		if (message.author.id === "392942526551818241") {
 			message.channel.send("Tu est ban du bot.")
 			return;
 		}
-
-		if (message.content.startsWith(prefix + "eval")){
-		if (message.author.id == "285345858348646400") {
-		let input = message.content.substr(7)
-		let color = 0xFFFFFF;
-		let output = "No output was defined";
-		try {
-		let result = eval(input);
-		color = 0x00E676;
-		output = result;
-		} catch (error) {
-			color = 0xFF5252;
-			output = error;
-			}
-		const eval33 = new Discord.RichEmbed()
-			.setAuthor("✅ Evaluation de la commande réusi! ✅")
-			.setColor(0x1b6bd3)
-			.addField(':inbox_tray: Le code', "```js\n" + input + "```", true)
-			.addField(':outbox_tray: Le résultat', "```js\n" + output + "\n```", false)
-			.setTimestamp()
-		message.channel.send({ embed: eval33 })
-	}else{
-		message.channel.send("Tu n'est pas mon créateur.")
-	}
-}
 		const arg = message.content.slice(prefix.length).trim().split(/ +/g);
 		const command = arg.shift().toLowerCase();
 
@@ -138,17 +119,6 @@ const Discord = require("discord.js"),
 				message.reply("Uhhh...Something went wrong :(");
 			})}
 
-		if (message.content =="comment vas tu ?") {
-			console.log("message comment vas tu initialisé");
-			var result = Math.floor((Math.random() * 2) + 1);
-			console.log(result);
-			if (result == 1){
-				message.reply("Merci, je vais très bien !");
-			}else if (result == 2){
-				message.reply("Je ne vais pas très bien, merci de te soucier de moi !");
-				}
-			}
-		
 		if(message.content === prefix + "infobot") {
 			message.delete()
 			var s = (Math.round(bot.uptime / 1000) % 60)
@@ -226,33 +196,6 @@ const Discord = require("discord.js"),
 							text: bot.user.username
 					},
 			}})
-		}
-
-		if (message.content === prefix + "niveau") {
-			var userXpDB = db.get("xp").filter({user: msgauthor}).find("xp").value();
-			var userxp = Object.values(userXpDB);
-			var value = message.content.substr(9);
-			var name = value;
-			var icon = message.author.avatarURL;
-			message.channel.send('', { embed: {
-				corlor: 543756,
-				author: {
-				name: name,
-				icon_url: message.author.avatarURL,
-			},
-			title: '',
-			url: '',
-			fields: [
-				{
-					name: 'XP', 
-					value: `${userxp[1]}`
-				},
-				],
-				footer: {
-				icon_url: bot.user.avatarURL,
-				text: bot.user.username		
-			},
-		}})
 		}
 
 		if(message.content === prefix + "invitation"){
@@ -378,18 +321,6 @@ const Discord = require("discord.js"),
 
 		switch (args[0].toLowerCase()){
 
-					case "newblague":
-			var value = message.content.substr(12);
-			var author = message.author.username;
-			var number = db.get('blagues').map('id').value();
-			console.log(value);
-			message.reply("ajout de la blague à la base de données");
-
-			db.get('blagues')
-				.push({ blague_value: value, blague_author: author })
-				.write();
-			break;
-
 			case "idée":	
 			var value = message.content.substr(7);
 			var author = message.author.username;
@@ -400,16 +331,6 @@ const Discord = require("discord.js"),
 				.push({ idée_value: value, idée_author: author })
 				.write();
 				break;
-			
-			case "raconteuneblague":
-			console.log('blague');
-
-			var result = Math.floor((Math.random() * blaguenumber) + 1);
-			var blague = db.get(`blagues[${result}].blague_value`).toString().value();
-			var author_blague = db.get(`blagues [${result}].blague_author`).toString().value();
-			message.channel.send(`Voici une blague : ${blague} \n(Blague de ${author_blague}) `);
-
-			break;
 
 			case "kick":
 			message.delete()
@@ -483,109 +404,28 @@ const Discord = require("discord.js"),
 
 			break;
 
-			case "buyitem":
-			message.delete()
-			
-				var itembuying = message.content.substr(10);
-				if (!itembuying){
-					itembuying = "Indeterminé";
-				}else{
-					console.log(`Shoplogs: Demmande d'achat d'item ${itembuying}`)
-					if (shopdb.get("shop_items").find({itemID: itembuying}).value()){
-						console.log("Item trouvé")
-						var info = shopdb.get("shop_items").filter({itemID: itembuying}).find("name", "desc").value();
-						var iteminfo = Object.values(info);
-						console.log(iteminfo);
-						message.author.send('', { embed: {
-							corlor: 543756,
-							author: {
-								name: message.author.tag,
-								icon_url: message.author.avatarURL,
-							},
-							title: `YoyoBot | Facture D'achat!`,
-							url: '',
-							fields: [
-								{
-								name: `*Attention, ceci n'est pas rembousable !*`, 
-								value: `Info:,*ID:* ***${iteminfo[0]}*** \n *Nom:* ***${iteminfo[1]}*** \n *Description:* ***${iteminfo[2]}*** \n *Prix:* ***${iteminfo[3]}***`
-								},
-							],
-							footer: {
-								icon_url: bot.user.avatarURL,
-								text: bot.user.username			
-							},
-						}})
-						var useritem = db.get("inventory").filter({user: msgauthor}).find("items").value();
-						var itemsdb = Object.values(useritem);
-						var userxpdb = db.get("xp").filter({user: msgauthor}).find("xp").value();
-						var userxp = Object.values(userxpdb);
+			case "8ball":
 
-						if (userxp[1] >= iteminfo[3]){
-							message.reply(`***Information: *** Votre achat (${iteminfo[1]}) a été accepté. Retrais de ${iteminfo[3]} XP`)
-							if (!db.get("inventory").filter({user: msgauthor}).find({items: "vide"}).value()){
-								console.log("inventaire pas vide !");
-								db.get("xp").filter({user: msgauthor}).find("xp").assign({user: msgauthor, xp: userxp[1] -= iteminfo[3]}).write();
-								db.get("inventory").filter({user: msgauthor}).find("items").assign({user: msgauthor, items: itemsdb[1] + "," + iteminfo[1]}).write();
-							}else{
-								console.log("inventaire vide !");
-								db.get("xp").filter({user: msgauthor}).find("xp").assign({user: msgauthor, xp: userxp[1] -= iteminfo[3]}).write();
-								db.get("inventory").filter({user: msgauthor}).find("items").assign({user: msgauthor, items: iteminfo[1]}).write();
-							}
-						}else{
-							message.reply("Erreur ! Achat impossible, nombre d'xp insufisant !");
-							}
-						}
-					}
-				
-						break;
-
-						case "roulette":
-						var result1 = Math.floor((Math.random() * 2) + 1) 
-						if (result1 == 1){
-						var sayings1 = ["noir",
-						"rouge",
-						"vert",
-						"noir",
-						"noir",
-						"rouge"]
-	var result = Math.floor((Math.random() * sayings1.length) + 0);
-	message.channel.send(sayings1[result1]);
-						}
-							if (result1 == 2){
-								var sayings2 = ["noir",
-								"rouge",
-								"vert",
-								"noir",
-								"noir",
-								"rouge"]
-			var result = Math.floor((Math.random() * sayings2.length) + 0);
-			message.channel.send(sayings2[result1]);
-							}
-						
-						break;
-
-						case "8ball":
-
-						var sayings = [":8ball: ***Il est certain***",
-						":8ball: ***| Il est décidément alors*** ",
-						":8ball: ***| Sans auqu'un doute***",
-						":8ball: ***| Oui, définitivement***",
-						":8ball: ***| Vous pouvez y répondre***",
-						":8ball: ***| Comme je le vois oui***",
-						":8ball: ***| probablement***",
-						":8ball: ***| Les perspectives sont bonnes***",
-						":8ball: ***| Oui***",
-						":8ball: ***| Les signes pointent vers Oui***",
-						":8ball: ***| Réponse brumeusse réessayer***",
-						":8ball: ***| Réassayez ultérieurement***",
-						":8ball: ***| Mieux vaut ne pas vous le dire maintenant***",
-						":8ball: ***| Je ne peux pas prédire maintenant***",
-						":8ball: ***| Concentrez-vous et demandez à nouveau***",
-						":8ball: ***| Ne comptez pas dessus***",
-						":8ball: ***| Ma réponse est non***",
-						":8ball: ***| Mes sources disent non***",
-						":8ball: ***| Les perspectives ne sont pas si bonnes***",
-						":8ball: ***| Très douteux***"];
+			 var sayings = [":8ball: ***Il est certain***",
+							":8ball: ***| Il est décidément alors*** ",
+							":8ball: ***| Sans auqu'un doute***",
+							":8ball: ***| Oui, définitivement***",
+							":8ball: ***| Vous pouvez y répondre***",
+							":8ball: ***| Comme je le vois oui***",
+							":8ball: ***| probablement***",
+							":8ball: ***| Les perspectives sont bonnes***",
+							":8ball: ***| Oui***",
+							":8ball: ***| Les signes pointent vers Oui***",
+							":8ball: ***| Réponse brumeusse réessayer***",
+							":8ball: ***| Réassayez ultérieurement***",
+							":8ball: ***| Mieux vaut ne pas vous le dire maintenant***",
+							":8ball: ***| Je ne peux pas prédire maintenant***",
+							":8ball: ***| Concentrez-vous et demandez à nouveau***",
+							":8ball: ***| Ne comptez pas dessus***",
+							":8ball: ***| Ma réponse est non***",
+							":8ball: ***| Mes sources disent non***",
+							":8ball: ***| Les perspectives ne sont pas si bonnes***",
+							":8ball: ***| Très douteux***"];
 
 	var result = Math.floor((Math.random() * sayings.length) + 0);
 	message.channel.send(sayings[result]);
@@ -624,11 +464,11 @@ const Discord = require("discord.js"),
 
 				case "live":
 				message.delete()
-					var streameur = arg(0)
-					var lien = arg(1)
+					var streameur = args[1]
+					var lien = args[2]
 				if (!streameur) return;
 				if (!lien)return;
-							message.channel.send('', { embed: {
+	 					message.channel.send('', { embed: {
 				color: 543756,
 				author: {
 					name: message.author.tag,
@@ -639,6 +479,34 @@ const Discord = require("discord.js"),
 				fields: [
 					{
 					name: `Bonjour à tous et a toute, nouveau live de ${streameur} `,
+					value: lien,
+					},
+				],
+				footer:{
+					icon_url: bot.user.avatarURL,
+					text: bot.user.username
+				},
+			}})
+
+				break;
+
+				case "vidéo":
+				message.delete()
+					var streameur = args[1]
+					var lien = args[2]
+				if (!streameur) return;
+				if (!lien)return;
+	 					message.channel.send('', { embed: {
+				color: 543756,
+				author: {
+					name: message.author.tag,
+					icon_url: message.author.avatarURL
+				},
+				title: '',
+				url: '',
+				fields: [
+					{
+					name: `Bonjour à tous et a toute, nouvelle vidéo de ${streameur} `,
 					value: lien,
 					},
 				],
@@ -760,58 +628,7 @@ const Discord = require("discord.js"),
 			}
 		})}
 
-	if (message.content.startsWith(prefix +"clear")) {
-		let modRole = message.guild.roles.find("name", "Mod");
-				if(!message.guild.roles.exists("name", "Mod")) {
-			return  message.channel.sendMessage("", {embed: {
-			title: "Erreur:",
-			color: 0xff0000,
-			description: " :no_entry_sign: Le rôle **Mod** n'existe pas dans ce serveur veuillez le créer pour Clear! :no_entry_sign: ",
-			footer: {
-				text: "Message par "+ bot.user.username
-			}
-			}}).catch(console.error);
-		} 
-		if(!message.member.roles.has(modRole.id)) {
-			return   message.channel.sendMessage("", {embed: {
-			title: "Erreur:",
-			color: 0xff0000,
-			description: " :no_entry_sign: Vous n'avez pas la permissions d'utiliser cette commande ! :no_entry_sign: ",
-			footer: {
-				text: "Message par "+ bot.user.username
-			}
-			}}).catch(console.error);
-		}
-		var args = message.content.substr(7);
-		if(args.length === 0){
-			message.channel.sendMessage("", {embed: {
-			title: "Erreur:",
-			color: 0xff0000,
-			description: " :x: Vous n'avez pas précisser le nombre :x: ",
-			footer: {
-				text: "Message par "+bot.user.username
-			}
-			}});
-		}
-		else {
-			var msg;
-			if(args.length === 1){
-			msg = 2;
-		} else {
-			msg = parseInt(args[1]);
-		}
-		message.channel.fetchMessages({limit: msg}).then(messages => message.channel.bulkDelete(messages)).catch(console.error);
-		message.channel.sendMessage("", {embed: {
-			title: "Success!",
-			color: 0x06DF00,
-			description: "Messages Suprimé!",
-			footer: {
-			text: "Message par "+bot.user.username
-			}
-		}});
-		}
-
-		}else if (msgc.startsWith(prefix +'google')){
+ if (msgc.startsWith(prefix +'google')){
 		const google = require("google");
 		const unirest = require("unirest");
 		
@@ -1115,17 +932,40 @@ const Discord = require("discord.js"),
 						});
 					};
 
-					bot.on('guildMemberAdd', member => {
-						member.guild.defaultChannel.send(":tada: Hey " + member + " ! Bienvenue sur " + member.guild.name + "!");
-					});
-					bot.on('guildMemberRemove', member => {
-						member.guild.defaultChannel.send(":frowning: " + member.user.tag + " a quitté le serveur...");
-					});
-
-						function clean(text) {
-							if (typeof(text) === "string") return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
-							else return text;
-						}
-
-////////////////////////////////////
+										
+					if(message.content.startsWith(prefix + "ftn")){
+		
+				//	if (!['pc', 'xbl', 'psn'].includes(args[1])) return message.channel.send('**Please Include the platform: `y/fortnite [ pc | xbl | psn ] <username>`**');
+				//	if (!args[2]) return message.channel.send('**Please Include the username: `!fortnite [ pc | xbl | psn ] <username>`**');
+			
+				let	platform = args[1]
+				let	username = args[2]
+			
+					client.get(username, platform)
+					.then(console.log)
+						message.channel.send("It's good");
+					//			const embed = new Discord.MessageEmbed()
+					//				.setColor(0xffffff)
+					//				.setTitle(`Stats for ${data.username}`)
+					//				.setDescription(`**Top Placement**\n\n**Top 3s:** *${data.lifetimeStats[0].value}*\n**Top 5s:** *${data.lifetimeStats[1].value}*\n**Top 6s:** *${data.lifetimeStats[3].value}*\n**Top 12s:** *${data.lifetimeStats[4].value}*\n**Top 25s:** *${data.lifetimeStats[5].value}*`, true)
+					//				.addField('Total Score', data.lifetimeStats[6].value, true)
+					//				.addField('Matches Played', data.lifetimeStats[7].value, true)
+					//				.addField('Wins', data.lifetimeStats[8].value, true)
+					//				.addField('Win Percentage', data.lifetimeStats[9].value, true)
+					//				.addField('Kills', data.lifetimeStats[10].value, true)
+					//				.addField('K/D Ratio', data.lifetimeStats[11].value, true)
+					//				.addField('Kills Per Minute', data.lifetimeStats[12].value, true)
+					//				.addField('Time Played', data.lifetimeStats[13].value, true)
+					//				.addField('Average Survival Time', data.lifetimeStats[14].value, true)
+			//
+			//					message.channel.send(embed)
+			//						.catch(error => {
+			//
+			//							message.channel.send('Username not found!');
+			//
+			//						})
+								}
+							
 })
+
+		
