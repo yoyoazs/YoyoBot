@@ -456,7 +456,6 @@ const Discord = require("discord.js"),
 				break;
 
 				case "live":
-				message.delete()
 					var streameur = args[1]
 					var lien = args[2]
 				if (!streameur) return;
