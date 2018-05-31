@@ -455,33 +455,6 @@ const Discord = require("discord.js"),
 
 				break;
 
-				case "live":
-					var streameur = args[1]
-					var lien = args[2]
-				if (!streameur) return;
-				if (!lien)return;
-	 					message.channel.send('', { embed: {
-				color: 543756,
-				author: {
-					name: message.author.tag,
-					icon_url: message.author.avatarURL
-				},
-				title: '',
-				url: '',
-				fields: [
-					{
-					name: `Bonjour à tous et a toute, nouveau live de ${streameur} `,
-					value: lien,
-					},
-				],
-				footer:{
-					icon_url: bot.user.avatarURL,
-					text: bot.user.username
-				},
-			}})
-
-				break;
-
 				case "vidéo":
 				message.delete()
 					var streameur = args[1]
@@ -924,5 +897,73 @@ const Discord = require("discord.js"),
 						});
 					};
 
+
+					if(message.content.startsWith(prefix + "live")){
+						message.delete()
+	
+					var streameur = args[1]
+					var lien = args[2]
+					if (!streameur) return;
+					if (!lien) return;
+				
+						(async function() {
+						
+						 const mainMessage = await message.channel.send('', { embed: {
+					 color: 543756,
+					 author: {
+						 name: bot.user.username,
+						 icon_url: bot.user.avatarURL
+					 },
+					 title: '',
+					 url: '',
+					 fields: [
+						 {
+						 name: `Nouveau live de ${streameur} `,
+						 value: lien,
+						 },
+					 ],
+					 footer:{
+						 icon_url: bot.user.avatarURL,
+						 text: bot.user.username
+					 },
+				 }}) 	
+						await mainMessage.react("🔴");
+						
+						const panier = mainMessage.createReactionCollector((reaction, user) => user.id === message.author.id);
+						 
+						panier.on('collect', async(reaction) => 
+						{
+						
+						if (reaction.emoji.name === "🔴") {
+						
+						
+						mainMessage.edit('', { embed: {
+							color: 543756,
+							author: {
+								name: bot.user.username,
+								icon_url: bot.user.avatarURL
+							},
+							title: '',
+							url: '',
+							fields: [
+								{
+								name: `${streameur} n'est plus en live`,
+								value: lien,
+								},
+							],
+							footer:{
+								icon_url: bot.user.avatarURL,
+								text: bot.user.username
+							},
+						}}) 	
+						 }
+						
+						 await reaction.remove(message.author.id);
+						
+						});
+						 }());
+						}
 										
 })
+
+		
