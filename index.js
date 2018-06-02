@@ -1,3 +1,4 @@
+require('dotenv').config()
 const Discord = require("discord.js"),
 	low = require('lowdb'),
 	FileSync = require('lowdb/adapters/FileSync'),
@@ -12,6 +13,7 @@ const Discord = require("discord.js"),
 	config = new FileSync('config.json'),
 	db = low(adapter),
 	shopdb = low(shopadapter),
+	apiController = require('./api-controller.js'),
 
 	idéeadapter = new FileSync('idéebase.json'),
 	dbi = low(idéeadapter)
@@ -963,7 +965,25 @@ const Discord = require("discord.js"),
 						});
 						 }());
 						}
-										
-})
 
-		
+					})
+					bot.on('message', msg => {
+						if(msg.content.startsWith('y/')){
+						  // Removes the ! from the command
+						  let command = msg.content.slice(2,msg.content.length)
+					  
+						  // Separate out the command from arguments
+						  let args = command.split(' ')
+						  command = args[0]
+						  args = args.slice(1, args.length)
+					  
+						  switch(command){
+							case 'ftn':
+							  apiController.ftn(msg, args)
+							  break;
+						  }
+					  
+					  
+						}
+					  })
+					  
