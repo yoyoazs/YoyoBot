@@ -9,10 +9,8 @@ const Discord = require("discord.js"),
 	app = express(),
 	con = console.log;
 	adapter = new FileSync('database.json'),
-	shopadapter = new FileSync('shop.json'),
 	config = new FileSync('config.json'),
 	db = low(adapter),
-	shopdb = low(shopadapter),
 	apiController = require('./api-controller.js'),
 
 	idéeadapter = new FileSync('idéebase.json'),
@@ -26,7 +24,6 @@ const Discord = require("discord.js"),
 	var prefix = ("y/");
 	var randnum = 0;
 
-	var blaguenumber = db.get('blagues').map('blague_value').value();
 
 	bot.on(("ready"), ()=> {
 		bot.user.setPresence({ game: { name: '[y/help] créé par yoyoazs77'}})
@@ -53,22 +50,6 @@ const Discord = require("discord.js"),
 
 		if(message.author.bot)return;
 
-		if(!db.get("inventory").find({user : msgauthor}).value()){
-			db.get("inventory").push({user : msgauthor, items: "vide"}).write();
-		}
-
-		if(!db.get("xp").find({user : msgauthor}).value()){
-			db.get("xp").push({user : msgauthor, xp: 1}).write();
-		}else{
-			var userxpdb = db.get("xp").filter({user: msgauthor}).find("xp").value();
-			console.log(userxpdb);
-			var userxp = Object.values(userxpdb)
-			console.log(userxp);
-			console.log(`Nombre d'xp : ${userxp[1]}`)
-
-		db.get("xp").find({user: msgauthor }).assign({user: msgauthor, xp: userxp[1] +=1}).write();
-
-		}
 
 		if (message.content.startsWith(prefix + "wiki")){
 			if(!message.content.substr(5)) {
@@ -375,30 +356,6 @@ const Discord = require("discord.js"),
 			}
 			break;
 
-			case "shop":
-			message.delete()
-			message.channel.send('', { embed: {
-				corlor: 543756,
-				author: {
-					name: message.author.tag,
-					icon_url: message.author.avatarURL,
-				},
-				title: 'YoyoBot Shop - Money utilisé : XP !',
-				url: '',
-				fields: [
-					{
-					name: 'Salut, ici tu trouveras des items et des badges a acheté !',
-					value: `Item:\nTEST [2XP][ID: item0001] Description: Ceci est un test non certifié !` 
-					},
-				],
-				footer: {
-					icon_url: bot.user.avatarURL,
-					text: bot.user.username			
-					},
-			}})
-
-			break;
-
 			case "8ball":
 
 			 var sayings = [":8ball: ***Il est certain***",
@@ -565,10 +522,6 @@ const Discord = require("discord.js"),
 							name: 'Bot',
 							value: checkbot,
 				inline: true
-	},{
-		name: 'Inventaire :',
-		value: inventory[1],
-		inline: true
 	},{
 		name: `Date de création de l'utilisateur :`,
 		value: userCreateDate[1] + ', ' + userCreateDate[2] + ', ' + userCreateDate[3] ,
@@ -773,17 +726,17 @@ const Discord = require("discord.js"),
 				{
 				 if (reaction.emoji.name === "✏") {
 				
-				mainMessage.edit("**Version du bot**:\n V.1.0.5");
+				mainMessage.edit("**Version du bot**:\n V.1.2.0");
 				
 				 }
 				if (reaction.emoji.name === "🔨") {
 				
-				mainMessage.edit("**Ajout:**\nLa commande 'logout' a étais ajouté mais n'est disponible que pour le créateur du bot.\La commande 'eval' a étais ajouté mais n'est disponible que pour le créateur du bot.");
+				mainMessage.edit("**Ajout:**\nLa commande 'ftn' a étais ajouté.\nLa commande 'live' et 'vidéo' ont étais ajouté.");
 				 
 				}
 				if (reaction.emoji.name === "🔧") {
 
-					mainMessage.edit("**Amélioration:**\nLa commande nouveauté a étais amélioré.\nLa commande help a étais amélioré.\La commande 'afk' est maintenant disponible.\nLa commande 'say' est disponible que pour le créateur du bot.")
+					mainMessage.edit("**Amélioration:**\nPlusieur commande ont étais supprimé.")
 				}
 				if (reaction.emoji.name === "🛑") {
 				
@@ -807,7 +760,7 @@ const Discord = require("discord.js"),
 					await mainMessage.react("📡");
 					await mainMessage.react("💻");
 					await mainMessage.react("🎰");
-					await mainMessage.react("🎒");
+					await mainMessage.react("🎮");
 					await mainMessage.react("📻");
 					await mainMessage.react("➕");
 					await mainMessage.react("🎉");
@@ -819,7 +772,7 @@ const Discord = require("discord.js"),
 					{
 					if (reaction.emoji.name === "🔨") {
 					
-					mainMessage.edit("**Les commandes pour les modérateurs:**\nLa commande 'mute <speudo>' qui permet de mute une personne spécifié.\nLa commande 'unmute <speudo>' qui permet d'unmute une personne spécifié.\nLa commande 'kick <speudo>' qui permet de kick une personne spécifié.\nLa commande 'ban <speudo>' qui permet de ban une personne spécifié.\nLa commande 'clear <nombre>' qui permet de supprimé un nombre de messages spécifié.");				
+					mainMessage.edit("**Les commandes pour les modérateurs:**\nLa commande 'mute <speudo>' qui permet de mute une personne spécifié.\nLa commande 'unmute <speudo>' qui permet d'unmute une personne spécifié.\nLa commande 'kick <speudo>' qui permet de kick une personne spécifié.\nLa commande 'ban <speudo>' qui permet de ban une personne spécifié.");				
 					 }
 					if (reaction.emoji.name === "📡") {
 					
@@ -833,13 +786,13 @@ const Discord = require("discord.js"),
 
 					mainMessage.edit("**Les commandes de jeux:**\nLa commande 'roll': Le bot choisit un nombre entre 1 et 100 et vous le dit.\nLa commande 'flip': Le bot lance la piece et vous dit si elle est tombé sur pile ou sur face.\nLa commande 'roulett': Le bot fait tourner la roulette et vous dit si la boulle est tombé sur le rouge, le noir ou le vert.")
 					}
-					if (reaction.emoji.name === "🎒") {
+					if (reaction.emoji.name === "🎮") {
 						
-					mainMessage.edit("**Les commandes qui ont besoin d'être stocker:**\nLa commande 'newblague' qui permet d'ajouté une blague a la base de donnée.\nLa commande 'raconteuneblague', le bot raconte un blague.\nLa commande 'shop' pour voir les items disponible dans le shop.\nLa commande 'buyitem' qui permet d'acheté un objet disponible.")
+					mainMessage.edit("**Les commandes qui conserne les jeux vidéo:\nLa commande 'ftn' <plateforme> <speudo> permet de voir les stats fornite d'une personne.")
 					}
 					if (reaction.emoji.name === "📻") {
 						
-					mainMessage.edit("**Les commandes informations:**\nLa commande 'info' permet de voir vos information.\nLa commande 'infobot' permet de voir les irformations du bot.\nLa commande 'niveau' pour voir votre niveau.\nLa commande 'up' pour voir depuis quand le bot est démaré.")
+					mainMessage.edit("**Les commandes informations:**\nLa commande 'infoserve' permet de voir les infos du serveur sur le quel vous êtes.\nLa commande 'info' permet de voir vos information.\nLa commande 'infobot' permet de voir les irformations du bot.\nLa commande 'niveau' pour voir votre niveau.\nLa commande 'up' pour voir depuis quand le bot est démaré.\nLa commande 'vidéo' <youtubeur> <lien> qui permet d'annoncer une vidéo\nLa commande 'live' <streameur> <lien> qui permet d'annoncé un live")
 					}
 					if (reaction.emoji.name === "➕") {
 						
