@@ -18,7 +18,6 @@ const Discord = require("discord.js"),
 
 	dbi.defaults({ idées: []}).write()
 
-	db.defaults({ blagues: [], xp: [], inventory: []}).write()
 
 	const bot = new Discord.Client();
 	var prefix = ("y/");
