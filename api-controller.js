@@ -121,7 +121,7 @@ module.exports = {
                 },
                 {
                 name: 'Top duo:',
-                value: `Top 5 ${duoTop5}, Top 12: ${duoTop12}`
+                value: `Top 5: ${duoTop5}, Top 12: ${duoTop12}`
                 },
                 {
                 name: `Squad:`,
@@ -129,7 +129,7 @@ module.exports = {
                 },
                 {
                 name: 'top squad:',
-                value: `Top 3 ${squadTop3}, Top 6: ${squadTop6}`
+                value: `Top 3: ${squadTop3}, Top 6: ${squadTop6}`
                 }
             ],
             footer: {
