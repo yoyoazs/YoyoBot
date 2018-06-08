@@ -1,4 +1,3 @@
-require('dotenv').config()
 const Discord = require("discord.js"),
 	low = require('lowdb'),
 	FileSync = require('lowdb/adapters/FileSync'),
@@ -11,13 +10,15 @@ const Discord = require("discord.js"),
 	adapter = new FileSync('database.json'),
 	config = new FileSync('config.json'),
 	db = low(adapter),
-	apiController = require('./api-controller.js'),
+	apiController = require('./api-controller.js');
+	const Yoyo = require('kaori');
+	const yoyo = new Yoyo();
+
 
 	idéeadapter = new FileSync('idéebase.json'),
 	dbi = low(idéeadapter)
 
 	dbi.defaults({ idées: []}).write()
-
 
 	const bot = new Discord.Client();
 	var prefix = ("y/");
@@ -32,7 +33,6 @@ const Discord = require("discord.js"),
 
 	bot.login(process.env.TOKEN);
 
-
 	bot.on("message", message => {
 		if (message.channel.type === "dm") 
 			return;
@@ -43,12 +43,22 @@ const Discord = require("discord.js"),
 		}
 		const arg = message.content.slice(prefix.length).trim().split(/ +/g);
 		const command = arg.shift().toLowerCase();
+		var args = message.content.substring(prefix.length).split(" ")
 
 		var msgauthor = message.author.tag;
-		var args = message.content.substring(prefix.length).split(" ")
 
 		if(message.author.bot)return;
 
+		if(message.content.startsWith(prefix + "rule34")) {
+			if(message.channel.name ==='nsfw'){
+				let r34 = args[1]
+				yoyo.search('rule34', { tags: [r34], limit: 1, random: true })
+				.then(images => message.channel.send(images[0].common.fileURL))
+			} else{
+				message.channel.send("Cette commande est interdite dans tout salons sauf nsfw")
+			}
+
+		}
 
 		if (message.content.startsWith(prefix + "wiki")){
 			if(!message.content.substr(5)) {
