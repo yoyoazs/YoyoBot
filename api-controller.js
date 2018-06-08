@@ -35,7 +35,7 @@ module.exports = {
       }
     }
 
-    request(options, (err, res, body) => {
+     request(options, (err, res, body) => {
       if(err){
         console.error(err)
         msg.reply(`There was a problem getting stats for ${username.replace('%20', ' ')} on ${platform}.`)
@@ -68,6 +68,9 @@ module.exports = {
           soloKd = data.stats.p2.kd.valueDec
           soloKill = data.stats.p2.kills.displayValue
           soloMatch = data.stats.p2.matches.displayValue
+          soloTop10 = data.stats.p2.top10.displayValue
+          soloTop25 = data.stats.p2.top25.displayValue
+          soloscore = data.stats.p2.score.displayValue
         }
 
         // Duos
@@ -76,14 +79,20 @@ module.exports = {
           duoKd = data.stats.p10.kd.valueDec
           duoKill = data.stats.p10.kills.displayValue
           duoMatch = data.stats.p10.matches.displayValue
+          duoTop5 = data.stats.p10.top5.displayValue
+          duoTop12 = data.stats.p10.top12.displayValue
+          duoscore =  data.stats.p10.score.displayValue
     } 
-        
+  
         // Squad 
         if(data.stats.p9){
           squadWins = data.stats.p9.top1.displayValue
           squadMatch = data.stats.p9.matches.displayValue
           squadKd = data.stats.p9.kd.valueDec
           squadKill = data.stats.p9.kills.displayValue
+          squadTop3 = data.stats.p9.top3.displayValue
+          squadTop6 = data.stats.p9.top6.displayValue
+          squadscore = data.stats.p9.score.displayValue
         }
 
         // The most important line of code.
@@ -100,16 +109,28 @@ module.exports = {
             fields: [
                 {
                 name: `Solo:`, 
-                value: `${user} a fait ${soloWins} top1 pour un K/D r de ${soloKd} (${soloKill} kills pour ${soloMatch} parties)`
+                value: `${user} a fait ${soloWins} top1 pour un K/D r de ${soloKd} (${soloKill} kills pour ${soloMatch} parties).Il a ${soloscore} de score totaux`,
+                },
+                {
+                name: 'Top solo:',
+                value: `Top 10: ${soloTop10}, Top 25: ${soloTop25}`
                 },
                 {
                 name: 'Duo:',
-                value: `${user} a fait ${duoWins} top1 pour un K/D r de ${duoKd} (${duoKill} kills pour ${duoMatch} parties)`
+                value: `${user} a fait ${duoWins} top1 pour un K/D r de ${duoKd} (${duoKill} kills pour ${duoMatch} parties).Il a ${duoscore} de score totaux`
+                },
+                {
+                name: 'Top duo:',
+                value: `Top 5 ${duoTop5}, Top 12: ${duoTop12}`
                 },
                 {
                 name: `Squad:`,
-                value: `${user} a fait ${squadWins} top1 pour un K/D r de ${squadKd} (${squadKill} kills pour ${squadMatch} parties)`
+                value: `${user} a fait ${squadWins} top1 pour un K/D r de ${squadKd} (${squadKill} kills pour ${squadMatch} parties).Il a ${squadscore} de score totaux`
                 },
+                {
+                name: 'top squad:',
+                value: `Top 3 ${squadTop3}, Top 6: ${squadTop6}`
+                }
             ],
             footer: {
                 icon_url: msg.author.avatarURL,
