@@ -17,6 +17,7 @@
     "dotenv": "^5.0.0",
     "google": "^2.1.0",
     "googleapis": "^23.0.0",
+    "kaori": "^1.1.4",
     "lowdb": "^1.0.0",
     "moment": "^2.19.4",
     "nodemon": "^1.12.1",
