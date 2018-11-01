@@ -42,7 +42,7 @@ const Discord = require("discord.js"),
 			message.channel.send("Tu est ban du bot.")
 			return;
 		}
-		const logd = bot.channels.get('465280937526296576');
+		const logd = bot.channels.get('507533548606193666');
 		const arg = message.content.slice(prefix.length).trim().split(/ +/g);
 		const command = arg.shift().toLowerCase();
 		var args = message.content.substring(prefix.length).split(" ")
@@ -56,10 +56,9 @@ const Discord = require("discord.js"),
 				let r34 = args[1]
 				yoyo.search('rule34', { tags: [r34], limit: 1, random: true })
 				.then(images => message.channel.send(images[0].common.fileURL))
-				logd.sendMessage( message.author.id + " a utilisé la commande **rule34**")
+	
 			} else{
 				message.channel.send("Cette commande est interdite dans tout salons sauf nsfw")
-				logd.sendMessage( message.author.id + "a utilisé la commande **rule34** dans un channel non nsfw")
 			}
 
 		}
@@ -68,7 +67,6 @@ const Discord = require("discord.js"),
 			if(!message.content.substr(5)) {
 				console.log(Date.now(), "DANGER", "Vous devez fournir un terme de recherche.");
 				message.reply("Vous devez fournir un terme de recherche.");
-				logd.sendMessage( message.author.id + "a utilisé la commande **wiki** sans définir un term de recherche")
 				return;
 			}
 			var wiki = new Wiki.default();
@@ -76,7 +74,6 @@ const Discord = require("discord.js"),
 				if(data.results.length==0) {
 					console.log(Date.now(), "DANGER","Wikipedia ne trouve pas ce que vous avez demandée : " + message.content.substr(5));
 					message.reply("Je ne peut trouvé ce que vous voulez dans Wikipedia :(");
-					logd.sendMessage( message.author.id + "a utilisé la commande **wiki** mais le bot ne peut pas trouvé sont terme de recherche dans wikipédia")
 					return;
 				}
 				wiki.page(data.results[0]).then(function(page) {
@@ -102,14 +99,13 @@ const Discord = require("discord.js"),
 								}
 							};
 							message.reply("**Trouvé " + page.raw.fullurl + "**", continuation);
-							logd.sendMessage( message.author.id + "a utilisé la commande **wiki**")
+					
 						}
 					});
 				});
 			}, function(err) {
 				console.log(Date.now(), "ERREUR","Impossible de se connecté a Wikipédia");
 				message.reply("Uhhh...Something went wrong :(");
-				logd.sendMessage( message.author.id + "a utilisé la commande **wiki** mais le bot ne peut pas se connecté a Wikipédia")
 			})}
 
 		if(message.content === prefix + "infobot") {
@@ -121,7 +117,6 @@ const Discord = require("discord.js"),
 			var M = (Math.round(bot.uptime / (1000 * 60 * 60 * 48 * 30 )))
 			m = (m < 10) ? "0" + m : m;
 			s = (s < 10) ? "0" + s : s;
-			logd.sendMessage( message.author.id + "a utilisé la commande **infobot**")
 		message.channel.send('', { embed: {
 		corlor: 543756,
 		author: {
@@ -170,7 +165,6 @@ const Discord = require("discord.js"),
 			var M = (Math.round(bot.uptime / (1000 * 60 * 60 * 48 *30)));
 				m = (m < 10) ? "0" + m : m;
 			s = (s < 10) ? "0" + s : s;
-			logd.sendMessage( message.author.id + "a utilisé la commande **up**")
 					message.channel.send('', { embed: {
 						color: 543756,
 						author: {
@@ -195,7 +189,6 @@ const Discord = require("discord.js"),
 
 		if(message.content === prefix + "invitation"){
 			message.delete()
-			logd.sendMessage( message.author.id + "a utilisé la commande **invitation**")
 			message.channel.send('', { embed: {
 				color: 543756,
 				author: {
@@ -219,7 +212,6 @@ const Discord = require("discord.js"),
 
 		if(message.content === prefix + "créateur"){
 			message.delete()
-			logd.sendMessage( message.author.id + "a utilisé la commande **créateur**")
 			message.channel.send('', { embed: {
 				color: 543756,
 				author: {
@@ -243,7 +235,6 @@ const Discord = require("discord.js"),
 
 		if (message.content === prefix + "roll"){
 			var result = Math.floor((Math.random() * 100 ) + 1);
-			logd.sendMessage( message.author.id + "a utilisé la commande **roll** il est tombé sur le nombre" + result)
 			message.reply(result)
 		}
 
@@ -264,48 +255,38 @@ const Discord = require("discord.js"),
 			if(msg.channel.type === 'dm') return;
 			if(!msg.guild.member(msg.author).hasPermission('MANAGE_MESSAGES')){
 			return msg.reply("**:x: Vous n'avez pas la permissions d'utiliser cette commande**").catch(console.error);
-			logd.sendMessage( message.author.id + "a utilisé la commande **mute** mais il n'a pas la permission")
 			}
 			if(msg.mentions.users.size === 0){
 			return msg.reply("**:x: Veuillez mentionner l'utilisateur que vous voulez mute**")
-			logd.sendMessage( message.author.id + "a utilisé la commande **mute** mais il n'a pas mentionner l'utilisateur")
 			}
 			if(!msg.guild.member(bot.user).hasPermission('MANAGE_MESSAGES')){
 			return msg.reply("**:x: Je n'ai pas la permission `MANAGE_MESSAGES` pour mute cet utilisateur**").catch(console.error);
-			logd.sendMessage( message.author.id + "a utilisé la commande **mute** mais le bot n'a pas la permission")
 			}
 			let muteMember = msg.guild.member(msg.mentions.users.first());
 			if(!muteMember){
 			return msg.channel.send("**:x: Cet utilisateur n'est certainement pas valide**")
-			logd.sendMessage( message.author.id + "a utilisé la commande **mute** mais l'utilisateur mentionné n'est pas valide")
 			}
 			msg.channel.overwritePermissions(muteMember, {SEND_MESSAGES: false}).then(member => {
 			msg.channel.send(`:speak_no_evil: **${muteMember.displayName}** a bien été mute ! :speak_no_evil:`);
-			logd.sendMessage( message.author.id + "a utilisé la commande **mute**")
 			})
 			}
 			if(msg.content.startsWith(prefix + 'unmute')){
 			if(msg.channel.type === 'dm') return;
 			if(!msg.guild.member(msg.author).hasPermission('MANAGE_MESSAGES')){
 			return msg.reply("**:x: Vous n'avez pas la permissions d'utiliser cette commande**").catch(console.error);
-			logd.sendMessage( message.author.id + "a utilisé la commande **unmute** mais il na pas la permission")
 			}
 			if(msg.mentions.users.size === 0){
 			return msg.reply("**:x: Veuillez mentionner l'utilisateur que vous voulez unmute**")
-			logd.sendMessage( message.author.id + "a utilisé la commande **unmute** mais il na pas mention l'utilisateur")
 			}
 			if(!msg.guild.member(bot.user).hasPermission('MANAGE_MESSAGES')){
 			return msg.reply("**:x: Je n'ai pas la permission `MANAGE_MESSAGES` pour unmute cet utilisateur**").catch(console.error);
-			logd.sendMessage( message.author.id + "a utilisé la commande **unmute** mais le bot n'a pas la permission")
 			}
 			let unmuteMember = msg.guild.member(msg.mentions.users.first());
 			if(!unmuteMember){
 			return msg.channel.send("**:x: Cet utilisateur n'est certainement pas valide**")
-			logd.sendMessage( message.author.id + "a utilisé la commande **unmute** mais il n'a pas mentionné d'utilisateur validé")
 			}
 			msg.channel.overwritePermissions(unmuteMember, {SEND_MESSAGES: true}).then(member => {
 			msg.channel.send(`:monkey_face: **${unmuteMember.displayName}** a bien été unmute ! :monkey_face:`);
-			logd.sendMessage( message.author.id + "a utilisé la commande **unmute**")
 			})
 			}
 
@@ -317,15 +298,12 @@ const Discord = require("discord.js"),
 			message.channel.send(sayMessage);
 			}else{
 				message.channel.send("**erreur** Tu n'est pas mon créateur")
-				logd.sendMessage( message.author.id + "a utilisé la commande a éssayer d'utiliser la commande **say**")
 			}	
 	}
 		
 		if (message.content.startsWith(prefix + "ping")) {
 			message.channel.send('Pong...').then((msg) => {
 				msg.edit(`Pong! La latence est de ${msg.createdTimestamp - message.createdTimestamp}ms. La latence de l'API est de ${Math.round(bot.ping)}ms`);
-				logd.sendMessage( message.author.id + "a utilisé la commande **ping**")
-				logd.sendMessage(`Pong! La latence est de ${msg.createdTimestamp - message.createdTimestamp}ms. La latence de l'API est de ${Math.round(bot.ping)}ms`)
 		
 		})
 	}
@@ -339,7 +317,6 @@ const Discord = require("discord.js"),
 			var author = message.author.username;
 			var number = dbi.get('idées').map('id').value();
 			message.reply("Votre idée a bien étais ajouté a liste, merci de votre participation pour amélioré le bot.")
-			logd.sendMessage( message.author.id + "a utilisé la commande **idée**")
 
 			dbi.get('idées')
 				.push({ idée_value: value, idée_author: author })
@@ -351,20 +328,16 @@ const Discord = require("discord.js"),
 
 			if (!message.channel.permissionsFor(message.member).hasPermission("KICK_MEMBERS")){
 				message.reply("Tu n'as pas le droit de kick ! :P")
-				logd.sendMessage( message.author.id + "a utilisé la commande **kick** mais il na pas la permision")
 			}else{
 				var memberkick = message.mentions.members.first();
 				if(!memberkick){
 					message.reply("L'utilisateur n'exite pas !");
-					logd.sendMessage( message.author.id + "a utilisé la commande **kick** mais l'utilisateur mentionné est invalide")
 				}else{
 					if(!message.guild.member(memberkick).kickable) {
 						message.reply("L'utilisateur est imposible a kick !");
-						logd.sendMessage( message.author.id + "a utilisé la commande **kick** mais l'utilisateur mentionné est imposible a kick")
 					}else{
 						memberkick.guild.member(memberkick).kick().then((member) => {
 						message.channel.send(`${member.displayName} a été kick !`);
-						logd.sendMessage( message.author.id + "a utilisé la commande **kick**")
 					}).catch(() => {
 						message.channel.send("Kick refusé !");
 					})
@@ -377,24 +350,19 @@ const Discord = require("discord.js"),
 			message.delete()
 
 			if(memberban.id === message.author.id) return message.channel.send("Vous ne pouvez pas vous ban.");
-			logd.sendMessage( message.author.id + "a utilisé la commande **ban** mais il a éssayé de se ban")
 			
 			if (!message.channel.permissionsFor(message.member).hasPermission("BAN_MEMBERS")){
 				message.reply("Tu n'as pas le droit de ban ! :P")
-				logd.sendMessage( message.author.id + "a utilisé la commande **ban** mais il n'a pas la permission")
 			}else{
 				var memberban = message.mentions.members.first();
 				if(!memberban){
 					message.reply("L'utilisateur n'exite pas !");
-					logd.sendMessage( message.author.id + "a utilisé la commande **ban** mais l'utilisateur est invalide")
 				}else{
 					if(!message.guild.member(memberban).bannable) {
 						message.reply("L'utilisateur est imposible a ban !");
-						logd.sendMessage( message.author.id + "a utilisé la commande **ban** mais l'utilisateur ne peut pas être ban")
 					}else{
 						memberban.guild.member(memberban).ban().then((member) => {
 						message.channel.send(`${member.displayName} a été banni !`);
-						logd.sendMessage( message.author.id + "a utilisé la commande **ban**")
 					}).catch(() => {
 						message.channel.send("Ban refusé !");
 					})
@@ -428,7 +396,6 @@ const Discord = require("discord.js"),
 
 	var result = Math.floor((Math.random() * sayings.length) + 0);
 	message.channel.send(sayings[result]);
-	logd.sendMessage( message.author.id + "a utilisé la commande **8ball**")
 
 					break;
 
@@ -436,7 +403,6 @@ const Discord = require("discord.js"),
 				message.delete()
 					var speudo = message.content.substr(11);
 				if (!speudo) return;
-				logd.sendMessage( message.author.id + "a utilisé la commande **fetenoel**")
 							message.channel.send('', { embed: {
 				color: 543756,
 				author: {
@@ -463,34 +429,7 @@ const Discord = require("discord.js"),
 
 				break;
 
-				case "vidéo":
-				logd.sendMessage( message.author.id + "a utilisé la commande **vidéo**")
-				message.delete()
-					var streameur = args[1]
-					var lien = args[2]
-				if (!streameur) return;
-				if (!lien)return;
-	 					message.channel.send('', { embed: {
-				color: 543756,
-				author: {
-					name: message.author.tag,
-					icon_url: message.author.avatarURL
-				},
-				title: '',
-				url: '',
-				fields: [
-					{
-					name: `Bonjour à tous et a toute, nouvelle vidéo de ${streameur} `,
-					value: lien,
-					},
-				],
-				footer:{
-					icon_url: bot.user.avatarURL,
-					text: bot.user.username
-				},
-			}})
 
-				break;
 
 			case "météo":
 					var location = message.content.substr(6);
@@ -500,7 +439,6 @@ const Discord = require("discord.js"),
 						weather.find({search: location, degreeType: unit}, function(err, data) {
 							if (data.length === 0) {
 								message.channel.send('**Veuillez entrer une localisation valide**') 
-								logd.sendMessage( message.author.id + "a utilisé la commande **météo** mais il n'a pas entré une localisation")
 								return; 
 							}
 							if(err) {
@@ -508,14 +446,12 @@ const Discord = require("discord.js"),
 								logd.sendMessage( message.author.id + "a utilisé la commande **météo** mais le bot ne peut pas trouvé d'information pour la ville" + location)
 								} else {
 								data = data[0];
-								logd.sendMessage( message.author.id + "a utilisé la commande **météo**")
 								message.channel.send("\n" + "**" + data.location.name + " Maintenant : **\n" + data.current.temperature + "°" + unit + " " + data.current.skytext + ", ressentie " + data.current.feelslike + "°, " + data.current.winddisplay + " Vent\n\n**Prévisions pour demain :**\nHaut: " + data.forecast[1].high + "°, Bas: " + data.forecast[1].low + "° " + data.forecast[1].skytextday + " avec " + data.forecast[1].precip + "% de chance de precipitation.");
 							}
 						});
 					} catch(err) {
 						console.logd(Date.now(), "ERREUR", "Weather.JS a rencontré une erreur");
 						message.reply("Idk pourquoi c'est cassé tbh :(");
-						log.sendMessage( message.author.id + "a utilisé la commande **météo** mais une erreur a étais rencontré")
 						}
 					}
 
@@ -546,7 +482,6 @@ const Discord = require("discord.js"),
 				}else {
 					var status = "Hors ligne";
 				}
-				logd.sendMessage( message.author.id + "a utilisé la commande **info**")
 			message.channel.sendMessage({
 					embed: {
 						type: 'rich',
@@ -615,7 +550,6 @@ const Discord = require("discord.js"),
 				const doSearch = () => {
 				google(query, (err, res) => {
 					if(err || res.links.length == 0) {
-						logd.sendMessage( message.author.id + "a utilisé la commande **google** mais auqu'un résultat n'a étais trouvé")
 					message.channel.sendMessage("🙅 Pas de resultas!");
 					} else {
 					const results = [];
@@ -628,7 +562,6 @@ const Discord = require("discord.js"),
 						i--;
 						continue;
 						}
-						logd.sendMessage( message.author.id + "a utilisé la commande **google**")	
 					message.channel.sendMessage({
 				embed: {
 					type: 'rich',
@@ -706,7 +639,6 @@ const Discord = require("discord.js"),
 						process.exit()
 		
 				} else {
-					logd.sendMessage( message.author.id + "a éssayer d'utilisé la commande **logout**")
 					message.channel.send("**Erreur** ! Tu n'es pas mon créateur")
 		
 				}
@@ -717,14 +649,12 @@ const Discord = require("discord.js"),
 			if (afk[msg.author.id]) {
 			delete afk[msg.author.id];
 			if (msg.member.nickname === null) {
-				logd.sendMessage( message.author.id + "a utilisé la commande **remafk**")
 			msg.channel.send(" re, j'ai enlever votre afk ^^");
 			}else{
 			msg.channel.send(" re, j'ai enlever votre afk ^^");
 			}
 			fs.writeFile("./afks.json", JSON.stringify(afk), (err) => { if (err) console.error(err);});
 			}else{
-				logd.sendMessage( message.author.id + "a utilisé la commande **afk** mais il est déja afk ")
 			msg.channel.send("Erreur ! Tu es déjà afk");
 			}
 			}
@@ -732,19 +662,16 @@ const Discord = require("discord.js"),
 			
 			if (msg.content.startsWith(prefix + "afk")||msg.content === prefix + "afk") {
 			if (afk[msg.author.id]) {
-			log.sendMessage( message.author.id + "a utilisé la commande **afk** mais il est déja afk")
 			return message.channel.send("Erreur ! Tu es déjà afk -_-");
 			}else{
 			let args1 = msg.content.split(" ").slice(1);
 			if (args1.length === 0) {
 			afk[msg.author.id] = {"reason" : true};
 			msg.delete();
-			logd.sendMessage( message.author.id + "a utilisé la commande **afk**")
 			msg.channel.send(`tu es désormais afk, fait **${prefix}remafk** pour enlever ton afk`);
 			}else{
 			afk[msg.author.id] = {"reason" : args1.join(" ")};
 			msg.delete();
-			logd.sendMessage( message.author.id + "a utilisé la commande **afk**")
 			msg.channel.send(`tu es désormais afk, fait **${prefix}remafk** pour enlever ton afk`);
 			}
 			fs.writeFile("./afks.json", JSON.stringify(afk), (err) => { if (err) console.error(err);});
@@ -763,7 +690,6 @@ const Discord = require("discord.js"),
 			}
 
 			if(message.content.startsWith(prefix + "nouveauté")){
-				logd.sendMessage( message.author.id + "a utilisé la commande **nouveauté**")
 				(async function() {
 				
 				 const mainMessage = await message.channel.send("**Version du bot:**\n V.1.3.0");
@@ -804,7 +730,7 @@ const Discord = require("discord.js"),
 				}
 
 				if(message.content.startsWith(prefix + "help")){
-					logd.sendMessage( `${message.author.id} a utilisé la commande **help**`)
+			
 					
 					(async function() {
 					
@@ -925,13 +851,11 @@ const Discord = require("discord.js"),
 
 
 if (message.content.startsWith(prefix + "idés")){
-	if (!message.member.roles.find("name", LESVRAIS)) {
-		message.reply("vous n'êtes pas actif.");return
-}else{
+
 	var idée = message.content.substr(9);
     var num = Math.floor((Math.random() * 9999999) + 1);
     var author = message.author.tag
-	var plt = bot.channels.get('456023563456217089');
+	var plt = bot.channels.get('507533548606193666');
 	message.delete
 	plt.sendMessage('', { embed: {
 		color: 16711680,
@@ -953,7 +877,7 @@ if (message.content.startsWith(prefix + "idés")){
 	},
 	}})
 		message.reply("Votre idée a bien étais prise en compte.")
-		}
+		
 }
 
 if (message.content.startsWith(prefix + "plateforme")){
@@ -964,49 +888,72 @@ if (message.content.startsWith(prefix + "plateforme")){
 	}
 
 	if (platform == 'PC'){
-		var PC = message.guild.roles.find(r => r.name === "PC💻");
-		if (!message.guild.roles.find("name", PC)) {
-			message.channel.send("**Le role PC💻 n'est pas sur le discord...**");
-			return; 
-		return message.author.name.addRole(PC).catch(console.error);
+		let PC = message.guild.roles.find('name','PC💻');
+		if(message.member.roles.find('name', 'PC💻')){
+			message.member.removeRole(PC)
+			message.reply("Le role PC💻 vous a bien étais retiré !")
+			return;
+		}else{
+			message.member.addRole(PC)
+			message.reply("Le role PC💻 vous a bien étais attribué")
+			return;
+		}
+	
 	}
 	if (platform == 'PS4'){
-		var PS4 = message.guild.roles.find(r => r.name === "PS4🎮");
-		if (!message.guild.roles.find("name", PS4)) {
-			message.channel.send("**Le role PS4🎮 n'est pas sur le discord...**");
-			return; 
-	}
-		return member.addRole(PS4).catch(console.error);
+		let PS4 = message.guild.roles.find('name', 'PS4🎮');
+		if(message.member.roles.find('name', 'PS4🎮')){
+			message.member.removeRole(PS4)
+			message.reply("Le role PS4🎮 vous a bien étais retiré !")
+			return;
+		}else{
+			message.member.addRole(PS4)
+			message.reply("Le role PS4🎮 vous a bien étais attribué")
+			return;
+		}
+	
 	}
 	if (platform == 'Xbox'){
-		var Xbox = message.guild.roles.find(r => r.name === "XBOX🕹");
-		if (!message.guild.roles.find("name", Xbox)) {
-			message.channel.send("**Le role XBOX🕹 n'est pas sur le discord...**");
-			return; 
-	}
-		return member.addRole(Xbox).catch(console.error);
+		let Xbox = message.guild.roles.find('name', 'XBOX🕹');
+		if(message.member.roles.find('name', 'XBOX🕹')){
+			message.member.removeRole(Xbox)
+			message.reply("Le role XBOX🕹 vous a bien étais retiré !")
+			return;
+		}else{
+			message.member.addRole(Xbox)
+			message.reply("Le role XBOX🕹 vous a bien étais attribué")
+			return;
+		}
+	
 	}
 	if (platform == 'Switch'){
-		var Switch = message.guild.roles.find(r => r.name === "Switch 🖲");
-		if (!message.guild.roles.find("name", Switch)) {
-			message.channel.send("**Le role Switch 🖲 n'est pas sur le discord...**");
-			return; 
-	}
-		return member.addRole(Switch).catch(console.error);
+		let Switch = message.guild.roles.find('name', 'Switch 🖲');
+		if(message.member.roles.find('name', 'Switch 🖲')){
+			message.member.removeRole(Switch)
+			message.reply("Le role Switch 🖲 vous a bien étais retiré !")
+			return;
+		}else{
+			message.member.addRole(Switch)
+			message.reply("Le role Switch 🖲 vous a bien étais attribué")
+			return;
+		}
 	}
 	if (platform == 'Mobil'){
-		var Mobil = message.guild.roles.find(r => r.name === "Tel📱")
-		if (!message.guild.roles.find("name", Mobil)) {
-				message.channel.send("**Le role Tel📱 n'est pas sur le discord...**");
-				return; 
+		let Mobil = message.guild.roles.find('name', 'Tel📱')
+		if(message.member.roles.find('name', 'Tel📱')){
+			message.member.removeRole(Mobil)
+			message.reply("Le role Tel📱 vous a bien étais retiré !")
+			return;
+		}else{
+			message.member.addRole(Mobil)
+			message.reply("Le role Tel📱 vous a bien étais attribué")
+			return;
 		}
-	return message.author.name.addRole(Mobil).catch(console.error);
 	}
 
 	if (platform  ===! 'PC'||'PS4'||'Xbox'||'Mobil'||'Switch'){
 		return message.channel.send("Vous avez peut-être fait une faute de frappe ? Les seulles plateforme disponibles sont: PC, PS4, Xbox, Switch et Mobil.")
 	}
 }
-}
 
- })							  
+ })					  
