@@ -311,18 +311,7 @@ const Discord = require("discord.js"),
 		if (!message.content.startsWith(prefix)) return;
 
 		switch (args[0].toLowerCase()){
-
-			case "idée":	
-			var value = message.content.substr(7);
-			var author = message.author.username;
-			var number = dbi.get('idées').map('id').value();
-			message.reply("Votre idée a bien étais ajouté a liste, merci de votre participation pour amélioré le bot.")
-
-			dbi.get('idées')
-				.push({ idée_value: value, idée_author: author })
-				.write();
-				break;
-
+		
 			case "kick":
 			message.delete()
 
@@ -956,4 +945,5 @@ if (message.content.startsWith(prefix + "plateforme")){
 	}
 }
 
- })					  
+ })
+					  
